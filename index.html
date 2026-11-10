@@ -320,7 +320,30 @@
     .manual-amount { font-weight: 700; font-size: 1.05rem; }
     .manual-ref { font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; color: var(--accent); }
     .manual-instr { white-space: pre-wrap; background: rgba(37,99,235,.06); padding: 10px 12px; border-radius: 10px; }
+  
+    .hero{max-width:1200px;margin:0 auto 20px;padding:30px 28px;border-radius:var(--radius);background:linear-gradient(135deg,#1a66d4,#7c3aed);color:#fff}
+    .hero h1{margin:0 0 8px;font-size:clamp(1.4rem,3vw,2.1rem)} .hero p{margin:0 0 14px;opacity:.92}
+    .hero-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+    .hero-pills span{background:rgba(255,255,255,.18);padding:6px 12px;border-radius:20px;font-size:.82rem;font-weight:600}
+    .hero .btn-primary{width:auto;display:inline-block;background:#fff;color:#1a66d4;padding:12px 22px}
+    .chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin:6px 0 10px}
+    .chip{border:2px solid var(--border);border-radius:10px;padding:10px 6px;background:var(--card-bg);color:var(--text-main);cursor:pointer;font-size:.74rem;font-weight:600;text-align:center;line-height:1.3}
+    .chip .ic{display:block;font-size:1.3rem;margin-bottom:2px} .chip.sel{border-color:var(--accent);background:rgba(37,99,235,.08)}
+    .chip .sw{display:block;height:34px;border-radius:6px;margin-bottom:4px}
+    .logo-tile{height:48px;display:flex;align-items:center;justify-content:center;border-radius:10px;color:#fff;font-weight:800;font-size:.9rem;cursor:pointer}
+    .ecc{display:grid;grid-template-columns:1fr 1fr;gap:8px} #ecc-level,#dynamic-category{display:none}
+    #qr-frame{display:flex;flex-direction:column;align-items:stretch;overflow:hidden;border-radius:14px}
+    .fr-bar{display:none;padding:8px 10px;text-align:center;font-weight:800;font-size:.95rem;letter-spacing:.5px}
+    .pricing{max-width:1200px;margin:28px auto 0} .pricing h2{text-align:center;margin:0 0 4px}
+    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+    @media(max-width:700px){.price-grid{grid-template-columns:1fr}}
+    .price-card{background:var(--card-bg);border:2px solid var(--border);border-radius:var(--radius);padding:22px;position:relative}
+    .price-card.best{border-color:var(--accent);box-shadow:0 8px 24px rgba(37,99,235,.18)}
+    .price-card .tag{position:absolute;top:-11px;right:16px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px}
+    .price-big{font-size:1.9rem;font-weight:800;margin:6px 0} .price-big small{font-size:.9rem;color:var(--text-muted);font-weight:600}
+    .price-card ul{padding-left:18px;font-size:.88rem;color:var(--text-muted);min-height:84px}
   </style>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@800&family=Pacifico&family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -354,6 +377,10 @@
       </div>
     </div>
 
+    <section class="hero"><h1>Crea QR dinámicos que puedes cambiar cuando quieras</h1>
+      <p>Imprímelo una sola vez y cambia el destino sin reimprimir. Con tu logo, colores, plantillas y marco personalizado.</p>
+      <div class="hero-pills"><span>🔄 Destino editable</span><span>🎨 Totalmente personalizable</span><span>🏷️ Marcos y plantillas</span><span>⏱ Listo en segundos</span><span>🎁 Prueba gratis: 7 días o 50 escaneos</span></div>
+      <button class="btn-primary" onclick="switchTab(0);document.querySelector('.tabs-nav').scrollIntoView({behavior:'smooth'})">Crear mi QR gratis</button></section>
     <!-- Pestañas de Navegación -->
     <div class="tabs-nav">
       <button class="tab-btn active" onclick="switchTab(0)" data-i18n="tab1">1. Contenido y Modo</button>
@@ -384,6 +411,7 @@
           </div>
 
           <label data-i18n="cat_title">Categoría de Contenido</label>
+          <div class="chips" id="type-chips"></div>
           <select id="dynamic-category" onchange="toggleCategoryFields(); updateQR();">
             <option value="url" selected data-i18n="cat_url">🌐 Sitio Web / URL</option>
             <option value="whatsapp" data-i18n="cat_wa">💬 WhatsApp Directo</option>
@@ -470,6 +498,7 @@
         <!-- Pestaña 2: Colores -->
         <div class="tab-pane" id="pane-1">
           <h3 style="margin-top: 0;" data-i18n="tab2">Apariencia y Colores</h3>
+          <label>Plantillas prediseñadas</label><div class="chips" id="tpl-grid"></div>
 
           <label data-i18n="lbl_color_type">Tipo de Color</label>
           <select id="color-type" onchange="toggleColorType(); updateQR();">
@@ -511,7 +540,7 @@
             <option value="rounded" selected>Redondeado</option>
             <option value="dots">Puntos</option>
             <option value="square">Cuadrado</option>
-            <option value="classy">Elegante</option>
+            <option value="classy">Elegante</option><option value="classy-rounded">Elegante redondeado</option>
             <option value="extra-rounded">Suave</option>
           </select>
         </div>
@@ -519,6 +548,8 @@
         <!-- Pestaña 3: Esquinas -->
         <div class="tab-pane" id="pane-2">
           <h3 style="margin-top: 0;" data-i18n="tab3">Esquinas del QR</h3>
+          <div class="grid-2"><div><label>Color del marco del ojo</label><input type="color" id="eye-out-color" value="#000000" style="height:42px;width:100%" oninput="updateQR()"></div>
+          <div><label>Color del centro del ojo</label><input type="color" id="eye-in-color" value="#000000" style="height:42px;width:100%" oninput="updateQR()"></div></div>
 
           <label data-i18n="lbl_eye_frame">Marco Exterior (Eye Frame)</label>
           <select id="corner-square" onchange="updateQR()">
@@ -532,6 +563,19 @@
             <option value="dot" selected>Círculo</option>
             <option value="square">Cuadrado</option>
           </select>
+        
+          <h4 style="margin:22px 0 4px">Marco del QR</h4><div class="chips" id="frame-chips"></div>
+          <div id="frame-opts" class="grid-2" style="display:none">
+            <div><label>Texto del marco</label><input type="text" id="frame-text" value="ESCANÉAME" maxlength="24" oninput="updateQR()"></div>
+            <div><label>Color del marco</label><input type="color" id="frame-color" value="#1a66d4" style="height:42px;width:100%" oninput="updateQR()"></div>
+            <div><label>Color del texto</label><input type="color" id="frame-text-color" value="#ffffff" style="height:42px;width:100%" oninput="updateQR()"></div>
+            <div><label>Fuente</label><select id="frame-font" onchange="updateQR()">
+              <option value="Arial">Arial</option><option value="Verdana">Verdana</option><option value="Georgia">Georgia</option>
+              <option value="'Courier New'">Courier New</option><option value="'Trebuchet MS'">Trebuchet</option><option value="Impact">Impact</option>
+              <option value="Poppins">Poppins</option><option value="Montserrat">Montserrat</option><option value="'Bebas Neue'">Bebas Neue</option><option value="Pacifico">Pacifico (cursiva)</option></select></div>
+            <div><label>Tamaño del texto</label><select id="frame-size" onchange="updateQR()">
+              <option value="s">Pequeño</option><option value="a" selected>Automático</option><option value="m">Mediano</option><option value="l">Grande</option></select></div>
+          </div>
         </div>
 
         <!-- Pestaña 5: Plan -->
@@ -557,7 +601,9 @@
           <label data-i18n="lbl_logo">Subir Logo Central (PNG / JPG)</label>
           <input type="file" id="logo-input" accept="image/*" onchange="handleLogo(event)">
 
-          <label data-i18n="lbl_ecc">Corrección de Errores (ECC)</label>
+          <label>Galería de logos (o sube el tuyo arriba)</label><div class="chips" id="logo-gallery"></div>
+          <label>Tamaño del logotipo</label><input type="range" id="logo-size" min="20" max="50" value="40" oninput="updateQR()">
+          <label data-i18n="lbl_ecc">Nivel de escaneabilidad (corrección de errores)</label><div class="ecc" id="ecc-cards"></div>
           <select id="ecc-level" onchange="updateQR()">
             <option value="Q" selected>Q - Alto (25%)</option>
             <option value="H">H - Máximo (30%)</option>
@@ -576,7 +622,7 @@
         </div>
         
         <div class="qr-container">
-          <div id="qrcode"></div>
+          <div id="qr-frame"><div class="fr-bar" id="qr-frame-top"></div><div id="qrcode"></div><div class="fr-bar" id="qr-frame-bot"></div></div>
         </div>
 
         <div class="plan-banner" id="plan-banner"></div>
@@ -592,6 +638,8 @@
       </div>
 
     </div>
+  
+    <section class="pricing"><h2>Planes y precios</h2><p style="text-align:center;color:var(--text-muted);margin:0">Empieza gratis y activa tu QR dinámico cuando lo necesites.</p><div class="price-grid" id="price-grid"></div></section>
   </div>
 
   <div class="toast" id="toast"></div>
@@ -602,7 +650,7 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwlvIsXmfY8zAyQ-EfWnZ_72ecpIF-it532-5MbEhwUHIU34TeFltRbJ08YKRN2r0PPcA/exec";
     // Solo para mostrar. El precio y la duración reales los define Code.gs (deben coincidir).
     const PLANS = {
-      free:    { days: 7,   price: {} },
+      free:    { days: 7, scans: 50, price: {} },
       monthly: { days: 30,  price: { HNL: 100, USD: 4.99 } },   // HNL = tarjeta (Tilopay), USD = PayPal
       yearly:  { days: 365, price: { HNL: 900, USD: 49.99 } }
     };
@@ -683,8 +731,8 @@
       lbl_wifi_ssid: "Nombre de la red (SSID) *", lbl_wifi_pass: "Contraseña", lbl_wifi_sec: "Seguridad",
       lbl_sms_phone: "Número *", lbl_sms_msg: "Mensaje", lbl_lat: "Latitud *", lbl_lng: "Longitud *", lbl_text: "Texto *",
       plan_title: "Plan y vigencia",
-      plan_hint: "El plan gratuito dura 7 días. Con un plan de pago tu QR queda alojado y redirigido mientras esté vigente. Son planes prepagados: al vencer deja de redirigir, y si pagas de nuevo se suma al tiempo restante.",
-      plan_free: "Gratis", plan_free_d: "7 días de vigencia", plan_monthly: "Mensual", plan_monthly_d: "30 días, renovable",
+      plan_hint: "El plan gratuito dura 7 días o 50 escaneos, lo que ocurra primero. Con un plan de pago tu QR queda alojado y redirigido mientras esté vigente. Son planes prepagados: al vencer deja de redirigir, y si pagas de nuevo se suma al tiempo restante.",
+      plan_free: "Gratis", plan_free_d: "7 días o 50 escaneos", plan_monthly: "Mensual", plan_monthly_d: "30 días, renovable",
       plan_yearly: "Anual", plan_yearly_d: "365 días, mejor precio", per_monthly: "/mes", per_yearly: "/año",
       pay_card: "💳 Pagar con tarjeta", pay_paypal: "Pagar con PayPal (USD)", verify_btn: "Ya pagué: verificar",
       exp_none: "QR estático: no vence nunca.", exp_until: "Activo hasta", exp_left: "días restantes", exp_est: "fecha estimada, se confirma al guardar",
@@ -701,8 +749,8 @@
       lbl_wifi_ssid: "Network name (SSID) *", lbl_wifi_pass: "Password", lbl_wifi_sec: "Security",
       lbl_sms_phone: "Number *", lbl_sms_msg: "Message", lbl_lat: "Latitude *", lbl_lng: "Longitude *", lbl_text: "Text *",
       plan_title: "Plan & validity",
-      plan_hint: "The free plan lasts 7 days. A paid plan keeps your QR hosted and redirecting while active. Plans are prepaid: when one expires the QR stops redirecting, and paying again adds to the remaining time.",
-      plan_free: "Free", plan_free_d: "7 days of validity", plan_monthly: "Monthly", plan_monthly_d: "30 days, renewable",
+      plan_hint: "The free plan lasts 7 days or 50 scans, whichever comes first. A paid plan keeps your QR hosted and redirecting while active. Plans are prepaid: when one expires the QR stops redirecting, and paying again adds to the remaining time.",
+      plan_free: "Free", plan_free_d: "7 days or 50 scans", plan_monthly: "Monthly", plan_monthly_d: "30 days, renewable",
       plan_yearly: "Yearly", plan_yearly_d: "365 days, best price", per_monthly: "/mo", per_yearly: "/yr",
       pay_card: "💳 Pay by card", pay_paypal: "Pay with PayPal (USD)", verify_btn: "I paid: verify",
       exp_none: "Static QR: never expires.", exp_until: "Active until", exp_left: "days left", exp_est: "estimated date, confirmed on save",
@@ -715,6 +763,8 @@
       err_email: "Enter a valid email to receive your edit link.", edit_loaded: "QR loaded. You can edit it now."
     });
 
+    Object.assign(translations.es, { limit_t: "Este código QR alcanzó el límite de escaneos de la prueba gratuita." });
+    Object.assign(translations.en, { limit_t: "This QR code reached the free trial scan limit." });
     Object.assign(translations.es, { style_lock: "🔒 Los estilos suaves (redondeado, puntos, elegante, esquinas curvas y círculos) son premium. El QR estático usa estilo cuadrado; cambia a QR dinámico para desbloquearlos." });
     Object.assign(translations.en, { style_lock: "🔒 Soft styles (rounded, dots, classy, curved corners and circles) are premium. Static QR uses the square style; switch to Dynamic QR to unlock them." });
 
@@ -814,11 +864,11 @@
         data: S.type === "dynamic" && id ? `${BASE_URL}?r=${encodeURIComponent(id)}` : getTarget(),
         dotsOptions: dots,
         backgroundOptions: { color: $("color-bg").value },
-        cornersSquareOptions: { type: $("corner-square").value },
-        cornersDotOptions: { type: $("corner-dot").value },
+        cornersSquareOptions: { type: $("corner-square").value, color: $("eye-out-color").value },
+        cornersDotOptions: { type: $("corner-dot").value, color: $("eye-in-color").value },
         qrOptions: { errorCorrectionLevel: $("ecc-level").value },
         image: S.logo || undefined,
-        imageOptions: { crossOrigin: "anonymous", margin: 6 }
+        imageOptions: { crossOrigin: "anonymous", margin: 6, imageSize: $("logo-size").value / 100 }
       });
     }
 
@@ -853,13 +903,22 @@
 
     // Descarga: se genera una copia al tamaño elegido (sin perder nitidez) con zona de silencio proporcional
     async function downloadQR() {
-      const ext = $("dl-format").value, size = +$("dl-size").value;
-      const hq = new QRCodeStyling({
-        ...qrCode._options, width: size, height: size,
-        margin: Math.round(QR_MARGIN * size / PREVIEW_SIZE),
-        type: ext === "svg" ? "svg" : "canvas"
-      });
-      await hq.download({ name: "qr-" + ($("qr-id").value.trim() || "codigo"), extension: ext });
+      const ext = $("dl-format").value, size = +$("dl-size").value, name = "qr-" + ($("qr-id").value.trim() || "codigo"), f = S.frame;
+      const hq = new QRCodeStyling({ ...qrCode._options, width: size, height: size, margin: Math.round(QR_MARGIN * size / PREVIEW_SIZE), type: ext === "svg" && f === "none" ? "svg" : "canvas" });
+      if (f === "none") { await hq.download({ name, extension: ext }); return; }
+      if (ext === "svg") toast("Con marco el archivo se descarga en PNG.");
+      const fam = $("frame-font").value; try { await document.fonts.load("800 40px " + fam); } catch (e) {}
+      const out = ext === "svg" ? "png" : ext, img = await createImageBitmap(await hq.getRawData("png"));
+      const c = $("frame-color").value, pad = Math.round(size * .05), bw = Math.round(size * .03), k = FS[$("frame-size").value] / .95, bar = f === "border" ? 0 : Math.round(size * .15 * Math.max(1, k));
+      const W = size + 2 * pad, H = size + 2 * pad + bar, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+      const x = cv.getContext("2d"), rr = (a, b, w, hh, r, col) => { x.fillStyle = col; x.beginPath(); x.roundRect(a, b, w, hh, r); x.fill(); };
+      x.fillStyle = "#fff"; x.fillRect(0, 0, W, H); rr(0, 0, W, H, pad, c);
+      const y0 = f === "top" ? bar : bw, hh = H - y0 - (f === "bottom" ? bar : bw);
+      rr(bw, y0, W - 2 * bw, hh, pad * .6, $("color-bg").value);
+      x.drawImage(img, (W - size) / 2, y0 + (hh - size) / 2, size, size);
+      if (bar) { x.fillStyle = $("frame-text-color").value; x.font = `800 ${Math.round(size * .0675 * k)}px ${fam}, sans-serif`; x.textAlign = "center"; x.textBaseline = "middle"; x.fillText($("frame-text").value, W / 2, f === "top" ? bar / 2 : H - bar / 2, W - 2 * pad); }
+      const blob = await new Promise(r => cv.toBlob(r, "image/" + out, .95));
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name + "." + out; a.click();
     }
 
     // ===== 6. PLANES, VIGENCIA Y PAGO =====
@@ -889,6 +948,8 @@
       const exp = S.expires ? new Date(S.expires) : new Date(Date.now() + PLANS[S.plan].days * 864e5);
       const left = Math.max(0, Math.ceil((exp - Date.now()) / 864e5));
       b.textContent = `${t("plan_" + S.plan)} · ${t("exp_until")} ${exp.toLocaleDateString(S.lang)} (${left} ${t("exp_left")})` + (S.expires ? "" : ` — ${t("exp_est")}`);
+      if (S.scans !== undefined) b.textContent += ` · ${S.scans}${S.limit ? " de " + S.limit : ""} escaneos`;
+      else if (S.plan === "free") b.textContent += ` · ${PLANS.free.scans} escaneos incluidos`;
       if (S.plan === "free" || left <= 3) b.classList.add("warn");
     }
 
@@ -939,7 +1000,9 @@
     }
     async function api(params) {
       const r = await fetch(SCRIPT_URL + "?" + new URLSearchParams(params));
-      return r.json();
+      const j = await r.json();
+      if (j && j.scans !== undefined) { S.scans = j.scans; S.limit = j.limit; }
+      return j;
     }
 
     async function verifyPayment() {
@@ -1002,6 +1065,8 @@
         if (d.status === "expired") {
           const when = d.expires ? ` ${t("expired_d")} ${new Date(d.expires).toLocaleDateString(S.lang)}.` : "";
           showMessage(t("expired_t") + "." + when);
+        } else if (d.status === "limit") {
+          showMessage(t("limit_t"));
         } else if (d.status === "success" && d.url) {
           // Solo se redirige a esquemas seguros; el resto se muestra como tarjeta (evita javascript:)
           if (/^(https?:|tel:|mailto:|sms:|smsto:)/i.test(d.url)) window.location.replace(d.url);
@@ -1067,5 +1132,60 @@
     });
 
   </script>
+
+<script>
+// ===== MEJORAS: tipos, plantillas, marcos, logos, escaneabilidad, precios =====
+S.frame = "none";
+const FS = { s: .8, a: .95, m: 1.2, l: 1.5 };
+const TYPES=[["url","🌐","URL / Enlace"],["whatsapp","💬","WhatsApp"],["phone","📞","Llamada"],["email","✉️","Correo"],["sms","📩","SMS"],["vcard","👤","vCard"],["wifi","📶","Wi-Fi"],["geo","📍","Mapa"],["text","📝","Texto"],
+["url","▶️","YouTube","https://youtube.com/@tu_canal"],["url","📸","Instagram","https://instagram.com/tu_usuario"],["url","📘","Facebook","https://facebook.com/tu_pagina"],["url","✈️","Telegram","https://t.me/tu_usuario"],["url","📄","PDF","Pega el enlace a tu PDF (Drive, Dropbox…)"],["url","🖼️","Imagen","Pega el enlace a tu imagen"],["url","📱","App Store / Play","Enlace de tu app"]];
+let tsel = 0;
+function pickType(i){ tsel=i; $("dynamic-category").value=TYPES[i][0]; if(TYPES[i][0]==="url") $("target-url").placeholder=TYPES[i][3]||"https://ejemplo.com/mi-pagina"; toggleCategoryFields(); updateQR(); }
+function renderTypes(){ const cur=$("dynamic-category").value, s=TYPES[tsel][0]===cur?tsel:TYPES.findIndex(t=>t[0]===cur);
+  $("type-chips").innerHTML=TYPES.map((t,i)=>`<div class="chip${i===s?" sel":""}" onclick="pickType(${i})"><span class="ic">${t[1]}</span>${t[2]}</div>`).join(""); }
+const _tcf = toggleCategoryFields; toggleCategoryFields = function(){ _tcf(); renderTypes(); };
+
+const TPL=[
+["Clásico",{d:"#000000",bg:"#ffffff",st:"square",cs:"square",cd:"square",e:["#000000","#000000"]}],
+["Océano",{g:["#0ea5e9","#1e3a8a"],bg:"#f0f9ff",st:"rounded",cs:"extra-rounded",cd:"dot",e:["#1e3a8a","#0ea5e9"],f:["bottom","#1e3a8a","#ffffff","ESCANÉAME"]}],
+["Atardecer",{g:["#f97316","#db2777"],bg:"#fff7ed",st:"dots",cs:"extra-rounded",cd:"dot",e:["#db2777","#f97316"],f:["bottom","#db2777","#ffffff","SÍGUENOS"]}],
+["Naturaleza",{d:"#166534",bg:"#f0fdf4",st:"classy-rounded",cs:"extra-rounded",cd:"dot",e:["#14532d","#166534"],f:["border","#166534"]}],
+["Negocio",{d:"#1e293b",bg:"#ffffff",st:"rounded",cs:"extra-rounded",cd:"dot",e:["#1e293b","#1e293b"],f:["top","#facc15","#111827","VISÍTANOS"]}],
+["Rosa",{d:"#be185d",bg:"#fdf2f8",st:"dots",cs:"dot",cd:"dot",e:["#9d174d","#be185d"]}]];
+function applyTpl(i){ const t=TPL[i][1]; if(S.type==="static") setQrType("dynamic");
+  $("color-type").value=t.g?"gradient":"solid"; if(t.g){$("grad-color1").value=t.g[0];$("grad-color2").value=t.g[1];} else $("color-dots").value=t.d;
+  $("color-bg").value=t.bg; $("dots-style").value=t.st; $("corner-square").value=t.cs; $("corner-dot").value=t.cd; $("eye-out-color").value=t.e[0]; $("eye-in-color").value=t.e[1];
+  const f=t.f||["none"]; S.frame=f[0]; if(f[1]) $("frame-color").value=f[1]; if(f[2]) $("frame-text-color").value=f[2]; if(f[3]) $("frame-text").value=f[3];
+  renderFrames(); toggleColorType(); updateQR(); toast("Plantilla "+TPL[i][0]+" aplicada"); }
+$("tpl-grid").innerHTML=TPL.map(([n,t],i)=>`<div class="chip" onclick="applyTpl(${i})"><span class="sw" style="background:${t.g?`linear-gradient(135deg,${t.g[0]},${t.g[1]})`:t.d}"></span>${n}</div>`).join("");
+
+const FRAMES=[["none","✕","Sin marco"],["bottom","▭","Texto abajo"],["top","⬒","Texto arriba"],["border","□","Solo borde"]];
+function setFrame(f){ S.frame=f; renderFrames(); updateQR(); }
+function renderFrames(){ $("frame-chips").innerHTML=FRAMES.map(([k,i,n])=>`<div class="chip${S.frame===k?" sel":""}" onclick="setFrame('${k}')"><span class="ic">${i}</span>${n}</div>`).join(""); $("frame-opts").style.display=S.frame==="none"?"none":"grid"; }
+function applyFrame(){ const s=S.frame, c=$("frame-color").value, fr=$("qr-frame"), tp=$("qr-frame-top"), bt=$("qr-frame-bot");
+  fr.style.border=s==="none"?"0":`5px solid ${c}`; fr.style.background=$("color-bg").value;
+  [tp,bt].forEach(b=>{ b.style.cssText=`background:${c};color:${$("frame-text-color").value};font-family:${$("frame-font").value},sans-serif;font-size:${FS[$("frame-size").value]}rem`; b.textContent=$("frame-text").value; });
+  tp.style.display=s==="top"?"block":"none"; bt.style.display=s==="bottom"?"block":"none"; }
+const _updateQR = updateQR; updateQR = function(){ _updateQR(); applyFrame(); };
+
+const LOGOS=[["WA","#25D366"],["f","#1877F2"],["IG","#E1306C"],["▶","#FF0000"],["X","#111111"],["in","#0A66C2"],["TG","#229ED9"],["www","#2563eb"]];
+function pickLogo(i){ if(i<0){ S.logo=""; return updateQR(); } const [g,c]=LOGOS[i], L=g.length>2;
+  S.logo="data:image/svg+xml;utf8,"+encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><rect width='120' height='120' rx='26' fill='${c}'/><text x='60' y='${L?72:80}' font-size='${L?40:60}' font-family='Arial' font-weight='700' fill='#fff' text-anchor='middle'>${g}</text></svg>`);
+  setEcc("H"); }
+$("logo-gallery").innerHTML=`<div class="logo-tile" style="background:var(--border);color:var(--text-muted)" onclick="pickLogo(-1)">✕</div>`+LOGOS.map(([g,c],i)=>`<div class="logo-tile" style="background:${c}" onclick="pickLogo(${i})">${g}</div>`).join("");
+
+const ECC=[["H","Mejor","Máxima resistencia al daño"],["Q","Alto","Óptimo, resistente a daños"],["M","Medio","Equilibrado"],["L","Pequeñísimo","Aspecto menos recargado"]];
+function setEcc(v){ $("ecc-level").value=v; renderEcc(); updateQR(); }
+function renderEcc(){ $("ecc-cards").innerHTML=ECC.map(([k,n,d])=>`<div class="type-card${$("ecc-level").value===k?" selected":""}" onclick="setEcc('${k}')"><h4>${n}</h4><p>${d}</p></div>`).join(""); }
+
+function pickPlan(k){ setPlan(k); switchTab(k==="free"?0:4); document.querySelector(".tabs-nav").scrollIntoView({behavior:"smooth"}); }
+(function renderPricing(){ const m=PLANS.monthly.price.HNL, y=PLANS.yearly.price.HNL, save=Math.round((1-y/(m*12))*100);
+  const cards=[["free","Gratis","L 0","",["7 días o 50 escaneos (lo que ocurra primero)","Todos los estilos de QR dinámico","Descarga PNG, SVG, JPEG y WEBP"]],
+  ["monthly","Mensual","L "+m,"/mes",["30 días, renovable","Tu QR redirige mientras esté vigente","Cambia el destino cuando quieras"]],
+  ["yearly","Anual","L "+y,"/año",[`Ahorras ${save}% frente al mensual`,"365 días de vigencia","Ideal para negocios"]]];
+  $("price-grid").innerHTML=cards.map(([k,n,p,per,f])=>`<div class="price-card${k==="yearly"?" best":""}">${k==="yearly"?'<span class="tag">Mejor precio</span>':""}<h3 style="margin:0">${n}</h3><div class="price-big">${p}<small>${per}</small></div><ul>${f.map(x=>"<li>"+x+"</li>").join("")}</ul><button class="btn-primary" onclick="pickPlan('${k}')">${k==="free"?"Empezar gratis":"Elegir "+n}</button></div>`).join(""); })();
+
+renderTypes(); renderFrames(); renderEcc(); applyFrame();
+</script>
 </body>
 </html>
