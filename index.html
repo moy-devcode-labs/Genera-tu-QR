@@ -335,13 +335,30 @@
     #qr-frame{display:flex;flex-direction:column;align-items:stretch;overflow:hidden;border-radius:14px}
     .fr-bar{display:none;padding:8px 10px;text-align:center;font-weight:800;font-size:.95rem;letter-spacing:.5px}
     .pricing{max-width:1200px;margin:28px auto 0} .pricing h2{text-align:center;margin:0 0 4px}
-    .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
-    @media(max-width:700px){.price-grid{grid-template-columns:1fr}}
+    .price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
+    @media(max-width:1000px){.price-grid{grid-template-columns:repeat(2,1fr)}} @media(max-width:600px){.price-grid{grid-template-columns:1fr}}
     .price-card{background:var(--card-bg);border:2px solid var(--border);border-radius:var(--radius);padding:22px;position:relative}
     .price-card.best{border-color:var(--accent);box-shadow:0 8px 24px rgba(37,99,235,.18)}
     .price-card .tag{position:absolute;top:-11px;right:16px;background:var(--accent);color:#fff;font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:20px}
     .price-big{font-size:1.9rem;font-weight:800;margin:6px 0} .price-big small{font-size:.9rem;color:var(--text-muted);font-weight:600}
     .price-card ul{padding-left:18px;font-size:.88rem;color:var(--text-muted);min-height:84px}
+      #redirect-view.neutral .redirect-logo{display:none}
+  .sol{max-width:1200px;margin:28px auto 0} .sol h2{text-align:center;margin:0 0 4px}
+    .sol-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:14px 0}
+    .sol-tabs button{border:2px solid var(--border);background:var(--card-bg);color:var(--text-main);border-radius:20px;padding:8px 16px;font-weight:600;cursor:pointer}
+    .sol-tabs button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+    .sol-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    @media(max-width:900px){.sol-grid{grid-template-columns:repeat(2,1fr)}} @media(max-width:560px){.sol-grid{grid-template-columns:1fr}}
+    .sol-card{background:var(--card-bg);border:2px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:8px}
+    .sol-card h3{margin:0;font-size:1.05rem} .sol-card p{margin:0;color:var(--text-muted);font-size:.88rem;flex:1}
+    .sol-card .soon{font-size:.72rem;font-weight:800;color:#b45309;background:rgba(245,158,11,.15);padding:3px 8px;border-radius:8px;align-self:flex-start}
+  .sol-tabs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0}
+    .sol-tabs button{border:2px solid var(--border);background:var(--card-bg);color:var(--text-main);border-radius:20px;padding:8px 16px;font-weight:700;cursor:pointer}
+    .sol-tabs button.sel{background:var(--accent);border-color:var(--accent);color:#fff}
+    .sol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+    .sol-card{background:var(--card-bg);border:2px solid var(--border);border-radius:var(--radius);padding:18px;cursor:pointer}
+    .sol-card .ic{font-size:1.8rem} .sol-card h3{margin:6px 0 4px;font-size:1.05rem} .sol-card p{margin:0 0 10px;font-size:.86rem;color:var(--text-muted)}
+    .sol-card b{font-size:.85rem;color:var(--accent)} .sol-card.soon{opacity:.7} .sol-card.soon b{color:#f59e0b}
   </style>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&family=Montserrat:wght@800&family=Pacifico&family=Bebas+Neue&display=swap" rel="stylesheet">
 </head>
@@ -576,6 +593,22 @@
             <div><label>Tamaño del texto</label><select id="frame-size" onchange="updateQR()">
               <option value="s">Pequeño</option><option value="a" selected>Automático</option><option value="m">Mediano</option><option value="l">Grande</option></select></div>
           </div>
+        
+          <h4 style="margin:22px 0 4px">Pantalla al escanear <span class="prem-tag">ANUAL / NEGOCIO</span></h4>
+          <p class="prem-note" id="scr-note"></p>
+          <label>Qué ve quien escanea tu QR</label>
+          <select id="scr-mode"><option value="direct">Ir directo a mi enlace</option><option value="screen">Mostrar mi pantalla personalizada</option></select>
+          <div id="scr-opts" style="display:none">
+            <label>Título</label><input type="text" id="scr-title" maxlength="60" placeholder="Bienvenido a Mi Negocio">
+            <label>Mensaje</label><input type="text" id="scr-msg" maxlength="200" placeholder="Toca el botón para ver nuestro menú">
+            <label>Texto del botón</label><input type="text" id="scr-btn" maxlength="30" value="Continuar">
+            <label>Logo (enlace https a tu imagen)</label><input type="url" id="scr-logo" placeholder="https://tusitio.com/logo.png">
+            <div class="grid-2"><div><label>Color de fondo</label><input type="color" id="scr-bg" value="#1a66d4" style="height:42px;width:100%"></div>
+            <div><label>Color del botón</label><input type="color" id="scr-accent" value="#f59e0b" style="height:42px;width:100%"></div></div>
+            <label>Continuar automáticamente</label>
+            <select id="scr-delay"><option value="0">Solo con el botón</option><option value="3" selected>A los 3 segundos</option><option value="5">A los 5 segundos</option><option value="8">A los 8 segundos</option></select>
+            <label>Vista previa</label><div id="scr-prev"></div>
+          </div>
         </div>
 
         <!-- Pestaña 5: Plan -->
@@ -639,6 +672,9 @@
 
     </div>
   
+    <section class="sol" id="soluciones"><h2>Soluciones para tu negocio</h2><p style="text-align:center;color:var(--text-muted);margin:0">Todo lo que necesitas para conectar, compartir y hacer crecer tu negocio.</p><div class="sol-tabs" id="sol-tabs"></div><div class="sol-grid" id="sol-grid"></div></section>
+
+    <section class="pricing" id="solutions"><h2>Soluciones</h2><p style="text-align:center;color:var(--text-muted);margin:0">Todo lo que puedes conectar con un código QR.</p><div class="sol-tabs" id="sol-tabs"></div><div class="sol-grid" id="sol-grid"></div></section>
     <section class="pricing"><h2>Planes y precios</h2><p style="text-align:center;color:var(--text-muted);margin:0">Empieza gratis y activa tu QR dinámico cuando lo necesites.</p><div class="price-grid" id="price-grid"></div></section>
   </div>
 
@@ -651,8 +687,10 @@
     // Solo para mostrar. El precio y la duración reales los define Code.gs (deben coincidir).
     const PLANS = {
       free:    { days: 7, scans: 50, price: {} },
-      monthly: { days: 30,  price: { HNL: 100, USD: 4.99 } },   // HNL = tarjeta (Tilopay), USD = PayPal
-      yearly:  { days: 365, price: { HNL: 900, USD: 49.99 } }
+      monthly: { days: 30,  price: { HNL: 199, USD: 6.99 } },   // HNL = tarjeta (Tilopay), USD = PayPal
+      yearly:  { days: 365, price: { HNL: 1990, USD: 69.99 } },
+      pro:     { days: 30,  price: { HNL: 499, USD: 17.99 } },
+      proyear: { days: 365, price: { HNL: 4990, USD: 179.99 } }
     };
     const PREVIEW_SIZE = 220, QR_MARGIN = 16;
     // Métodos de pago visibles. Pon tilopay: true cuando tu banco te dé las credenciales y esté configurado.
@@ -733,7 +771,7 @@
       plan_title: "Plan y vigencia",
       plan_hint: "El plan gratuito dura 7 días o 50 escaneos, lo que ocurra primero. Con un plan de pago tu QR queda alojado y redirigido mientras esté vigente. Son planes prepagados: al vencer deja de redirigir, y si pagas de nuevo se suma al tiempo restante.",
       plan_free: "Gratis", plan_free_d: "7 días o 50 escaneos", plan_monthly: "Mensual", plan_monthly_d: "30 días, renovable",
-      plan_yearly: "Anual", plan_yearly_d: "365 días, mejor precio", per_monthly: "/mes", per_yearly: "/año",
+      plan_yearly: "Anual", plan_yearly_d: "365 días, sin marca y con estilos exclusivos", per_monthly: "/mes", per_yearly: "/año",
       pay_card: "💳 Pagar con tarjeta", pay_paypal: "Pagar con PayPal (USD)", verify_btn: "Ya pagué: verificar",
       exp_none: "QR estático: no vence nunca.", exp_until: "Activo hasta", exp_left: "días restantes", exp_est: "fecha estimada, se confirma al guardar",
       dl_size: "Calidad / tamaño", dl_fmt: "Formato", dl_btn: "Descargar",
@@ -751,7 +789,7 @@
       plan_title: "Plan & validity",
       plan_hint: "The free plan lasts 7 days or 50 scans, whichever comes first. A paid plan keeps your QR hosted and redirecting while active. Plans are prepaid: when one expires the QR stops redirecting, and paying again adds to the remaining time.",
       plan_free: "Free", plan_free_d: "7 days or 50 scans", plan_monthly: "Monthly", plan_monthly_d: "30 days, renewable",
-      plan_yearly: "Yearly", plan_yearly_d: "365 days, best price", per_monthly: "/mo", per_yearly: "/yr",
+      plan_yearly: "Yearly", plan_yearly_d: "365 days, no branding and exclusive styles", per_monthly: "/mo", per_yearly: "/yr",
       pay_card: "💳 Pay by card", pay_paypal: "Pay with PayPal (USD)", verify_btn: "I paid: verify",
       exp_none: "Static QR: never expires.", exp_until: "Active until", exp_left: "days left", exp_est: "estimated date, confirmed on save",
       dl_size: "Quality / size", dl_fmt: "Format", dl_btn: "Download",
@@ -995,7 +1033,7 @@
     }
     function ownerToken(id) {
       let k = tokenMap()[id];
-      if (!k) { k = crypto.randomUUID() + crypto.randomUUID(); setOwnerToken(id, k); }
+      if (!k) { k = localStorage.getItem("moy_acct"); if (!k) { k = crypto.randomUUID() + crypto.randomUUID(); localStorage.setItem("moy_acct", k); } setOwnerToken(id, k); } // una clave de cuenta por dispositivo
       return k;
     }
     async function api(params) {
@@ -1023,9 +1061,10 @@
       if (email && !EMAIL_RE.test(email)) { switchTab(0); return toast(t("err_email"), "err"); }
       const btn = $("save-btn"); btn.disabled = true; let ok = false;
       try {
-        const d = await api({ action: "save", id, url, key, plan: S.plan, email });
+        const d = await api({ action: "save", id, url, key, plan: S.plan, email, ...(isPro() ? { screen: JSON.stringify(scrCfg()) } : {}) });
         if (d.status === "success") { if (PLANS[d.plan]) S.plan = d.plan; S.expires = d.expires || null; renderBanner(); toast(t("saved_ok")); ok = true; }
         else if (d.status === "payment_required") toast(t("pay_pending"), "err");
+        else if (d.status === "quota") toast(`Llegaste al límite de ${d.limit} QR dinámicos de tu plan. Mejora tu plan para crear más.`, "err");
         else toast(t("err_key"), "err");
       } catch (e) { toast(t("err_conn"), "err"); }
       btn.disabled = false;
@@ -1061,15 +1100,20 @@
       $("app-view").style.display = "none";
       $("redirect-view").style.display = "flex";
       try {
+        $("redirect-view").classList.add("neutral");
         const d = await api({ action: "get", id });
+        const direct = d.status === "success" && d.plan && d.plan !== "free";
+        if (!direct) $("redirect-view").classList.remove("neutral");
         if (d.status === "expired") {
           const when = d.expires ? ` ${t("expired_d")} ${new Date(d.expires).toLocaleDateString(S.lang)}.` : "";
           showMessage(t("expired_t") + "." + when);
         } else if (d.status === "limit") {
           showMessage(t("limit_t"));
+        } else if (d.status === "success" && d.url && showScreen(d)) {
+          /* pantalla personalizada mostrada */
         } else if (d.status === "success" && d.url) {
           // Solo se redirige a esquemas seguros; el resto se muestra como tarjeta (evita javascript:)
-          if (/^(https?:|tel:|mailto:|sms:|smsto:)/i.test(d.url)) window.location.replace(d.url);
+          if (/^(https?:|tel:|mailto:|sms:|smsto:)/i.test(d.url)) { if (direct) window.location.replace(d.url); else setTimeout(() => window.location.replace(d.url), 1200); }
           else showLanding(d.url);
         } else showMessage(t("not_found"));
       } catch (e) { showMessage(t("err_conn")); }
@@ -1103,7 +1147,7 @@
         if (PLANS[d.plan]) S.plan = d.plan;
         S.expires = d.expires || null;
         $("recover-email").value = d.email || "";
-        fillTarget(d.url || "");
+        fillTarget(d.url || ""); applyScr(d.screen);
         renderPlans(); renderBanner(); updateQR(); toast(t("edit_loaded"));
       } catch (e) { toast(t("err_conn"), "err"); }
     }
@@ -1149,19 +1193,25 @@ const TPL=[
 ["Clásico",{d:"#000000",bg:"#ffffff",st:"square",cs:"square",cd:"square",e:["#000000","#000000"]}],
 ["Océano",{g:["#0ea5e9","#1e3a8a"],bg:"#f0f9ff",st:"rounded",cs:"extra-rounded",cd:"dot",e:["#1e3a8a","#0ea5e9"],f:["bottom","#1e3a8a","#ffffff","ESCANÉAME"]}],
 ["Atardecer",{g:["#f97316","#db2777"],bg:"#fff7ed",st:"dots",cs:"extra-rounded",cd:"dot",e:["#db2777","#f97316"],f:["bottom","#db2777","#ffffff","SÍGUENOS"]}],
-["Naturaleza",{d:"#166534",bg:"#f0fdf4",st:"classy-rounded",cs:"extra-rounded",cd:"dot",e:["#14532d","#166534"],f:["border","#166534"]}],
+["Naturaleza",{d:"#166534",bg:"#f0fdf4",st:"extra-rounded",cs:"extra-rounded",cd:"dot",e:["#14532d","#166534"],f:["bottom","#166534","#ffffff","NATURAL"]}],
 ["Negocio",{d:"#1e293b",bg:"#ffffff",st:"rounded",cs:"extra-rounded",cd:"dot",e:["#1e293b","#1e293b"],f:["top","#facc15","#111827","VISÍTANOS"]}],
-["Rosa",{d:"#be185d",bg:"#fdf2f8",st:"dots",cs:"dot",cd:"dot",e:["#9d174d","#be185d"]}]];
-function applyTpl(i){ const t=TPL[i][1]; if(S.type==="static") setQrType("dynamic");
+["Rosa",{d:"#be185d",bg:"#fdf2f8",st:"dots",cs:"dot",cd:"dot",e:["#9d174d","#be185d"]}],
+["Restaurante",{p:1,g:["#dc2626","#f59e0b"],bg:"#fffbeb",st:"classy-rounded",cs:"extra-rounded",cd:"dot",e:["#991b1b","#dc2626"],f:["bottom","#dc2626","#ffffff","VER MENÚ"],ff:"'Bebas Neue'"}],
+["Boda",{p:1,d:"#a16207",bg:"#fefce8",st:"classy",cs:"dot",cd:"dot",e:["#854d0e","#a16207"],f:["bottom","#a16207","#ffffff","NUESTRA BODA"],ff:"Pacifico"}],
+["Tecnología",{p:1,g:["#06b6d4","#6366f1"],bg:"#f8fafc",st:"dots",cs:"square",cd:"square",e:["#4f46e5","#06b6d4"],f:["top","#4f46e5","#ffffff","CONÉCTATE"],ff:"Montserrat"}],
+["Evento",{p:1,g:["#a855f7","#ec4899"],bg:"#faf5ff",st:"dots",cs:"extra-rounded",cd:"dot",e:["#7e22ce","#ec4899"],f:["bottom","#7e22ce","#ffffff","ÚNETE"],ff:"Poppins"}],
+["Salud",{p:1,d:"#0f766e",bg:"#f0fdfa",st:"classy-rounded",cs:"extra-rounded",cd:"dot",e:["#115e59","#0f766e"],f:["border","#0f766e"]}],
+["Tienda",{p:1,g:["#f59e0b","#ef4444"],bg:"#fff7ed",st:"classy",cs:"square",cd:"dot",e:["#b45309","#ef4444"],f:["top","#f59e0b","#111827","COMPRA AQUÍ"],ff:"Impact"}]];
+function applyTpl(i){ const t=TPL[i][1]; if(t.p&&!isPro()) return lockPro("🔒 Plantilla exclusiva del plan Anual"); if(S.type==="static") setQrType("dynamic");
   $("color-type").value=t.g?"gradient":"solid"; if(t.g){$("grad-color1").value=t.g[0];$("grad-color2").value=t.g[1];} else $("color-dots").value=t.d;
   $("color-bg").value=t.bg; $("dots-style").value=t.st; $("corner-square").value=t.cs; $("corner-dot").value=t.cd; $("eye-out-color").value=t.e[0]; $("eye-in-color").value=t.e[1];
-  const f=t.f||["none"]; S.frame=f[0]; if(f[1]) $("frame-color").value=f[1]; if(f[2]) $("frame-text-color").value=f[2]; if(f[3]) $("frame-text").value=f[3];
+  const f=t.f||["none"]; S.frame=f[0]; if(f[1]) $("frame-color").value=f[1]; if(f[2]) $("frame-text-color").value=f[2]; if(f[3]) $("frame-text").value=f[3]; $("frame-font").value=t.ff||"Arial";
   renderFrames(); toggleColorType(); updateQR(); toast("Plantilla "+TPL[i][0]+" aplicada"); }
-$("tpl-grid").innerHTML=TPL.map(([n,t],i)=>`<div class="chip" onclick="applyTpl(${i})"><span class="sw" style="background:${t.g?`linear-gradient(135deg,${t.g[0]},${t.g[1]})`:t.d}"></span>${n}</div>`).join("");
+function renderTpl(){ $("tpl-grid").innerHTML=TPL.map(([n,t],i)=>`<div class="chip" onclick="applyTpl(${i})"><span class="sw" style="background:${t.g?`linear-gradient(135deg,${t.g[0]},${t.g[1]})`:t.d}"></span>${n}${t.p&&!isPro()?" 🔒":""}</div>`).join(""); }
 
 const FRAMES=[["none","✕","Sin marco"],["bottom","▭","Texto abajo"],["top","⬒","Texto arriba"],["border","□","Solo borde"]];
-function setFrame(f){ S.frame=f; renderFrames(); updateQR(); }
-function renderFrames(){ $("frame-chips").innerHTML=FRAMES.map(([k,i,n])=>`<div class="chip${S.frame===k?" sel":""}" onclick="setFrame('${k}')"><span class="ic">${i}</span>${n}</div>`).join(""); $("frame-opts").style.display=S.frame==="none"?"none":"grid"; }
+function setFrame(f){ if(f==="border"&&!isPro()) return lockPro("🔒 Marco exclusivo del plan Anual"); S.frame=f; renderFrames(); updateQR(); }
+function renderFrames(){ $("frame-chips").innerHTML=FRAMES.map(([k,i,n])=>`<div class="chip${S.frame===k?" sel":""}" onclick="setFrame('${k}')"><span class="ic">${i}</span>${n}${k==="border"&&!isPro()?" 🔒":""}</div>`).join(""); $("frame-opts").style.display=S.frame==="none"?"none":"grid"; }
 function applyFrame(){ const s=S.frame, c=$("frame-color").value, fr=$("qr-frame"), tp=$("qr-frame-top"), bt=$("qr-frame-bot");
   fr.style.border=s==="none"?"0":`5px solid ${c}`; fr.style.background=$("color-bg").value;
   [tp,bt].forEach(b=>{ b.style.cssText=`background:${c};color:${$("frame-text-color").value};font-family:${$("frame-font").value},sans-serif;font-size:${FS[$("frame-size").value]}rem`; b.textContent=$("frame-text").value; });
@@ -1179,13 +1229,147 @@ function setEcc(v){ $("ecc-level").value=v; renderEcc(); updateQR(); }
 function renderEcc(){ $("ecc-cards").innerHTML=ECC.map(([k,n,d])=>`<div class="type-card${$("ecc-level").value===k?" selected":""}" onclick="setEcc('${k}')"><h4>${n}</h4><p>${d}</p></div>`).join(""); }
 
 function pickPlan(k){ setPlan(k); switchTab(k==="free"?0:4); document.querySelector(".tabs-nav").scrollIntoView({behavior:"smooth"}); }
-(function renderPricing(){ const m=PLANS.monthly.price.HNL, y=PLANS.yearly.price.HNL, save=Math.round((1-y/(m*12))*100);
-  const cards=[["free","Gratis","L 0","",["7 días o 50 escaneos (lo que ocurra primero)","Todos los estilos de QR dinámico","Descarga PNG, SVG, JPEG y WEBP"]],
-  ["monthly","Mensual","L "+m,"/mes",["30 días, renovable","Tu QR redirige mientras esté vigente","Cambia el destino cuando quieras"]],
-  ["yearly","Anual","L "+y,"/año",[`Ahorras ${save}% frente al mensual`,"365 días de vigencia","Ideal para negocios"]]];
-  $("price-grid").innerHTML=cards.map(([k,n,p,per,f])=>`<div class="price-card${k==="yearly"?" best":""}">${k==="yearly"?'<span class="tag">Mejor precio</span>':""}<h3 style="margin:0">${n}</h3><div class="price-big">${p}<small>${per}</small></div><ul>${f.map(x=>"<li>"+x+"</li>").join("")}</ul><button class="btn-primary" onclick="pickPlan('${k}')">${k==="free"?"Empezar gratis":"Elegir "+n}</button></div>`).join(""); })();
+const CONTACT_URL = ""; // pon aquí tu WhatsApp o correo, ej. "https://wa.me/504XXXXXXXX"
+function askQuote(){ CONTACT_URL ? window.open(CONTACT_URL, "_blank") : toast("Escríbenos para cotizar tu plan corporativo."); }
+(function(){ const ES={plan_monthly:"Emprendedor mensual",plan_monthly_d:"30 días · hasta 10 QR · sin marca QR-MOY",per_monthly:"/mes",plan_yearly:"Emprendedor anual",plan_yearly_d:"365 días · hasta 10 QR · sin marca y con estilos exclusivos",per_yearly:"/año",plan_pro:"Negocio mensual",plan_pro_d:"30 días · hasta 30 QR · todo lo de Emprendedor",per_pro:"/mes",plan_proyear:"Negocio anual",plan_proyear_d:"365 días · hasta 30 QR · todo lo de Emprendedor",per_proyear:"/año"},
+ EN={plan_monthly:"Starter monthly",plan_monthly_d:"30 days · up to 10 QR · no QR-MOY branding",per_monthly:"/mo",plan_yearly:"Starter yearly",plan_yearly_d:"365 days · up to 10 QR · no branding, exclusive styles",per_yearly:"/yr",plan_pro:"Business monthly",plan_pro_d:"30 days · up to 30 QR · everything in Starter",per_pro:"/mo",plan_proyear:"Business yearly",plan_proyear_d:"365 days · up to 30 QR · everything in Starter",per_proyear:"/yr"};
+ Object.keys(translations).forEach(l => Object.assign(translations[l], l === "es" ? ES : EN)); })();
+(function renderPricing(){ const P=PLANS, sv=(m,y)=>Math.round((1-P[y].price.HNL/(P[m].price.HNL*12))*100), n=x=>x.toLocaleString("en-US");
+  const C=[["Gratis","L 0","",["1 QR dinámico","7 días o 50 escaneos","Estilos básicos y 3 plantillas","Pantalla breve de QR-MOY","Descarga hasta 1024 px"],[["free","Empezar gratis"]]],
+  ["Emprendedor","L "+n(P.monthly.price.HNL),"/mes · o L "+n(P.yearly.price.HNL)+"/año",["Hasta 10 QR dinámicos","Escaneos ilimitados","Sin marca QR-MOY: redirige directo","Descarga HD hasta 2048 px (PNG, JPEG, WEBP) y SVG","Plantillas, formas y degradados exclusivos","Estadísticas básicas (próximamente)"],[["monthly","Elegir mensual"],["yearly","Elegir anual (ahorra "+sv("monthly","yearly")+"%)"]]],
+  ["Negocio","L "+n(P.pro.price.HNL),"/mes · o L "+n(P.proyear.price.HNL)+"/año",["Hasta 30 QR dinámicos","Todo lo de Emprendedor","Descarga hasta 4096 px","Analíticas avanzadas (próximamente)","Dominio personalizado (próximamente)","Descarga vectorial EPS (próximamente)","Soporte prioritario (próximamente)"],[["pro","Elegir mensual"],["proyear","Elegir anual (ahorra "+sv("pro","proyear")+"%)"]],1],
+  ["Corporativo","L 999+","/mes",["QR ilimitados o paquetes masivos","Gestión de equipos y API (a medida)"],[["contact","Cotizar"]]]];
+  $("price-grid").innerHTML=C.map(([nm,p,per,f,b,best])=>`<div class="price-card${best?" best":""}">${best?'<span class="tag">Más completo</span>':""}<h3 style="margin:0">${nm}</h3><div class="price-big">${p}<small> ${per}</small></div><ul>${f.map(x=>"<li>"+x+"</li>").join("")}</ul>${b.map(([k,l],i)=>`<button class="btn-primary" style="margin-top:${i?8:0}px" onclick="${k==="contact"?"askQuote()":"pickPlan('"+k+"')"}">${l}</button>`).join("")}</div>`).join(""); })();
 
-renderTypes(); renderFrames(); renderEcc(); applyFrame();
+const PRO_OPT={"dots-style":["classy","classy-rounded"],"frame-font":["Poppins","Montserrat","'Bebas Neue'","Pacifico"]};
+function isPro(){ return ["yearly","pro","proyear"].includes(S.plan)&&(!S.expires||new Date(S.expires)>Date.now()); }
+function lockPro(m){ toast(m||"🔒 Exclusivo del plan Anual"); setPlan("yearly"); switchTab(4); }
+function applyPro(){ const pro=isPro();
+  Object.entries(PRO_OPT).forEach(([id,vals])=>{ const sel=$(id);
+    [...sel.options].forEach(o=>{ if(!vals.includes(o.value)) return; o.text=o.text.replace(" 🔒","")+(pro?"":" 🔒"); if(!pro) o.disabled=true; else if(S.type!=="static"||id==="frame-font") o.disabled=false; });
+    if(!pro&&vals.includes(sel.value)) sel.value=[...sel.options].find(o=>!vals.includes(o.value)&&!o.disabled).value; });
+  renderTpl(); renderFrames(); }
+const _asl=applyStyleLock; applyStyleLock=function(){ _asl(); applyPro(); };
+const _rb=renderBanner; renderBanner=function(){ _rb(); applyPro(); };
+renderTypes(); renderEcc(); applyPro(); applyFrame();
+</script>
+
+<script>
+// ===== Calidad de descarga por plan + catálogo de soluciones =====
+function curTier(){ const act = S.plan !== "free" && (!S.expires || new Date(S.expires) > Date.now()); return act ? S.plan : "free"; }
+const maxRes = () => ({ free: 1024, monthly: 2048, yearly: 2048, pro: 4096, proyear: 4096 })[curTier()] || 1024;
+function applyRes(){ const s = $("dl-size"), m = maxRes();
+  [...s.options].forEach(o => { o.dataset.b = o.dataset.b || o.textContent; const lock = +o.value > m; o.disabled = lock; o.textContent = o.dataset.b + (lock ? " 🔒" : ""); });
+  if (+s.value > m) s.value = String(m); }
+const _rb3 = renderBanner; renderBanner = function(){ _rb3(); applyRes(); };
+const _dl = downloadQR; downloadQR = async function(){ if (+$("dl-size").value > maxRes()) { toast("Esa calidad es de un plan superior."); return pickPlan("monthly"); } return _dl(); };
+
+const SOL_TABS = ["Popular", "Negocio", "Marketing", "Productos", "Formularios y eventos"];
+const SOL = [
+ { t: "Tarjeta digital", d: "Comparte tus datos de contacto y deja que te guarden con un toque.", c: ["Popular", "Negocio"], soon: 1 },
+ { t: "QR de enlace (URL)", d: "Lleva a tus clientes a tu sitio, campaña o red social con un escaneo.", c: ["Popular", "Marketing"], type: 0 },
+ { t: "QR de WhatsApp", d: "Abre un chat contigo con el mensaje ya escrito.", c: ["Popular", "Negocio", "Marketing"], type: 1 },
+ { t: "Menú digital", d: "Menú por categorías, siempre actualizado, con QR para las mesas.", c: ["Popular", "Negocio"], soon: 1 },
+ { t: "QR de PDF", d: "Folletos, catálogos y manuales a un escaneo (con el enlace a tu PDF).", c: ["Marketing", "Productos"], type: 13 },
+ { t: "QR de Wi-Fi", d: "Tus clientes se conectan sin escribir la clave.", c: ["Negocio"], type: 6 },
+ { t: "QR de ubicación", d: "Abre tu local directamente en el mapa.", c: ["Negocio", "Marketing"], type: 7 },
+ { t: "QR de contacto (vCard)", d: "Tus datos en un QR para guardarlos en el teléfono.", c: ["Negocio"], type: 5 },
+ { t: "Link in Bio", d: "Una página con todos tus enlaces para tus redes sociales.", c: ["Marketing"], soon: 1 },
+ { t: "QR de redes sociales", d: "Instagram, Facebook, YouTube o Telegram en un escaneo.", c: ["Marketing"], type: 10 },
+ { t: "QR de app", d: "Enlace directo a tu app en App Store o Play Store.", c: ["Productos"], type: 15 },
+ { t: "QR de producto", d: "Empaques con información, videos y soporte.", c: ["Productos"], soon: 1 },
+ { t: "QR de formulario", d: "Recibe registros, opiniones y pedidos con un formulario.", c: ["Formularios y eventos"], soon: 1 },
+ { t: "QR de evento", d: "Registro o ubicación de tu evento (enlace a tu formulario).", c: ["Formularios y eventos"], type: 0 }
+];
+let solTab = "Popular";
+function renderSol(){
+  $("sol-tabs").innerHTML = SOL_TABS.map(t => `<button class="${t === solTab ? "on" : ""}" onclick="solTab='${t}';renderSol()">${t}</button>`).join("");
+  $("sol-grid").innerHTML = SOL.map((s, i) => s.c.includes(solTab) ? `<div class="sol-card"><h3>${s.t}</h3><p>${s.d}</p>${s.soon ? '<span class="soon">PRÓXIMAMENTE</span>' : `<button class="btn-secondary" onclick="startSol(${i})">Crear ahora</button>`}</div>` : "").join("");
+}
+function startSol(i){ switchTab(0); pickType(SOL[i].type); document.querySelector(".tabs-nav").scrollIntoView({ behavior: "smooth" }); }
+renderSol(); applyRes();
+</script>
+
+<script>
+// ===== Catálogo de soluciones por categorías + resolución de descarga por plan =====
+const SOL_TABS=["Popular","Negocio","Marketing","Productos","Formularios y eventos"];
+// [icono, título, descripción, índice en TYPES (null = próximamente), categorías]
+const SOL=[
+["🌐","QR de enlace (URL)","Lleva a tu web, campaña o contenido en línea con un escaneo.",0,[0,2]],
+["💬","QR de WhatsApp","Abre un chat contigo con un mensaje ya escrito.",1,[0,1,2]],
+["👤","QR de contacto (vCard)","Guarda tus datos en la agenda del teléfono.",5,[1]],
+["📶","QR de Wi-Fi","Tus clientes se conectan a tu red sin escribir la clave.",6,[1]],
+["📍","QR de ubicación","Abre tu negocio en el mapa.",7,[1]],
+["📸","Redes sociales","YouTube, Instagram, Facebook y Telegram en un escaneo.",10,[2]],
+["📄","QR de PDF","Catálogos, menús y manuales (pega el enlace de tu PDF).",13,[3,2]],
+["🖼️","QR de imagen","Muestra una foto o un afiche (pega el enlace).",14,[3]],
+["📱","QR de app","Lleva a tu app en App Store o Google Play.",15,[3]],
+["📞","Llamada, correo y SMS","Contacto directo con un toque.",2,[4]],
+["🪪","Tarjeta de presentación digital","Página móvil con botón Guardar en Contactos.",null,[0,1]],
+["🍽️","Menú digital","Menú autogestionable para restaurantes y cafeterías.",null,[0,1]],
+["🔗","Link in Bio","Todos tus enlaces en una sola página.",null,[0,2]],
+["📝","Formularios y registro","Recoge datos de clientes y asistentes a eventos.",null,[4]],
+["📦","QR de producto","Información, videos y soporte en tu empaque.",null,[3]]];
+let solTab=0;
+function renderSol(){
+  $("sol-tabs").innerHTML=SOL_TABS.map((t,i)=>`<button class="${i===solTab?"sel":""}" onclick="solTab=${i};renderSol()">${t}</button>`).join("");
+  $("sol-grid").innerHTML=SOL.map((s,i)=>s[4].includes(solTab)?`<div class="sol-card${s[3]===null?" soon":""}" onclick="openSol(${i})"><span class="ic">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p><b>${s[3]===null?"Próximamente":"Crear ahora →"}</b></div>`:"").join("");
+}
+function openSol(i){ const s=SOL[i]; if(s[3]===null) return toast("«"+s[1]+"» estará disponible pronto."); switchTab(0); pickType(s[3]); document.querySelector(".tabs-nav").scrollIntoView({behavior:"smooth"}); }
+renderSol();
+
+const isPaid=()=>S.plan!=="free"&&(!S.expires||new Date(S.expires)>Date.now());
+const maxRes=()=>!isPaid()?1024:(["pro","proyear"].includes(S.plan)?4096:2048);
+function applyRes(){ const sel=$("dl-size"), m=maxRes();
+  if(![...sel.options].some(o=>o.value==="4096")) sel.add(new Option("4096 px","4096"));
+  [...sel.options].forEach(o=>{ o.dataset.b=o.dataset.b||o.textContent; const lock=+o.value>m; o.disabled=lock; o.textContent=o.dataset.b+(lock?" 🔒":""); });
+  if(+sel.value>m) sel.value=String(m); }
+const _rb2=renderBanner; renderBanner=function(){ _rb2(); applyRes(); };
+applyRes();
+</script>
+
+<script>
+// ===== Pantalla personalizada al escanear (plan anual / Negocio) =====
+const hexOk = x => /^#[0-9a-f]{6}$/i.test(x || "") ? x : "#1a66d4";
+const bright = c => { const n = parseInt(c.slice(1), 16); return ((n >> 16) * 299 + ((n >> 8 & 255) * 587) + ((n & 255) * 114)) / 1000; };
+function buildScan(c, url, live) {   // todo el texto va con textContent: nada del usuario se interpreta como HTML
+  const bg = hexOk(c.bg), w = document.createElement("div");
+  w.style.cssText = (live ? "position:fixed;inset:0;z-index:9999;" : "border-radius:16px;min-height:280px;") + `background:${bg};color:${bright(bg) > 150 ? "#111827" : "#fff"};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;font-family:system-ui,sans-serif`;
+  if (/^https:\/\//i.test(c.logo || "")) { const i = new Image(); i.src = c.logo; i.alt = ""; i.style.cssText = "max-width:140px;max-height:100px;object-fit:contain"; i.onerror = () => i.remove(); w.appendChild(i); }
+  if (c.title) { const h1 = document.createElement("h1"); h1.textContent = c.title; h1.style.cssText = "margin:0;font-size:1.6rem"; w.appendChild(h1); }
+  if (c.msg) { const p = document.createElement("p"); p.textContent = c.msg; p.style.cssText = "margin:0;max-width:420px;opacity:.9"; w.appendChild(p); }
+  const b = document.createElement("a"); b.textContent = c.btn || "Continuar"; b.href = live ? url : "#"; if (!live) b.onclick = e => e.preventDefault();
+  const ac = hexOk(c.accent); b.style.cssText = `background:${ac};color:${bright(ac) > 150 ? "#111827" : "#fff"};padding:12px 28px;border-radius:30px;font-weight:700;text-decoration:none`; w.appendChild(b);
+  if (live && Number(c.delay) > 0) setTimeout(() => location.replace(url), Number(c.delay) * 1000);
+  return w;
+}
+function showScreen(d) {
+  let c; try { c = JSON.parse(d.screen || "{}"); } catch (e) { return false; }
+  if (!c || c.mode !== "screen" || !/^https?:/i.test(d.url)) return false;
+  $("redirect-view").style.display = "none"; document.body.appendChild(buildScan(c, d.url, true)); return true;
+}
+function scrCfg() {
+  if ($("scr-mode").value !== "screen") return { mode: "direct" };
+  return { mode: "screen", title: $("scr-title").value, msg: $("scr-msg").value, btn: $("scr-btn").value, logo: $("scr-logo").value.trim(), bg: $("scr-bg").value, accent: $("scr-accent").value, delay: +$("scr-delay").value };
+}
+function scrChange() {
+  const on = $("scr-mode").value === "screen"; $("scr-opts").style.display = on ? "block" : "none";
+  const p = $("scr-prev"); p.textContent = ""; if (on) p.appendChild(buildScan(scrCfg(), "#", false));
+}
+function applyScr(s) {
+  try { const c = typeof s === "string" ? JSON.parse(s || "{}") : (s || {}); if (c.mode === "screen") { $("scr-mode").value = "screen";
+    ["title", "msg", "btn", "logo", "bg", "accent", "delay"].forEach(k => { if (c[k] !== undefined) $("scr-" + k).value = c[k]; }); } } catch (e) {}
+  scrChange();
+}
+function lockScr() {
+  const p = isPro(); ["scr-mode", "scr-title", "scr-msg", "scr-btn", "scr-logo", "scr-bg", "scr-accent", "scr-delay"].forEach(id => $(id).disabled = !p);
+  if (!p) $("scr-mode").value = "direct";
+  $("scr-note").innerHTML = p ? "✨ Personaliza lo que ve quien escanea antes de ir a tu enlace. Se guarda al presionar Guardar." : "🔒 Disponible en el plan anual y en Negocio. <a href='#' onclick=\"pickPlan('yearly');return false\">Ver planes</a>";
+  scrChange();
+}
+document.querySelectorAll("#scr-opts input,#scr-opts select,#scr-mode").forEach(e => e.addEventListener("input", scrChange));
+const _rb5 = renderBanner; renderBanner = function () { _rb5(); lockScr(); };
+lockScr();
 </script>
 </body>
 </html>
