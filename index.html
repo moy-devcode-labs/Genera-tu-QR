@@ -558,6 +558,7 @@
             <option value="dots">Puntos</option>
             <option value="square">Cuadrado</option>
             <option value="classy">Elegante</option><option value="classy-rounded">Elegante redondeado</option>
+            <option value="x-diamond">Diamantes ◆</option><option value="x-heart">Corazones ♥</option><option value="x-star">Estrellas ★</option><option value="x-hexagon">Hexágonos ⬢</option><option value="x-cross">Cruces ✚</option><option value="x-leaf">Hojas 🍃</option><option value="x-mix">Mezcla ♥ ◆ ★ ⬢</option>
             <option value="extra-rounded">Suave</option>
           </select>
         </div>
@@ -573,14 +574,21 @@
             <option value="extra-rounded" selected>Curva Suave</option>
             <option value="square">Cuadrado</option>
             <option value="dot">Redondo</option>
+            <option value="x-round">Esquinas suaves ▢</option><option value="x-squircle">Súper redondo</option><option value="x-leaf">Hoja ◩</option><option value="x-leaf2">Hoja invertida ◪</option><option value="x-drop">Gota</option><option value="x-drop2">Gota invertida</option><option value="x-oct">Octágono ⯃</option><option value="x-diamond">Rombo ◇</option>
           </select>
 
           <label data-i18n="lbl_eye_ball">Centro Interior (Eye Ball)</label>
           <select id="corner-dot" onchange="updateQR()">
             <option value="dot" selected>Círculo</option>
             <option value="square">Cuadrado</option>
+            <option value="x-round">Cuadrado suave</option><option value="x-leaf">Hoja</option><option value="x-leaf2">Hoja invertida</option><option value="x-drop">Gota</option><option value="x-diamond">Diamante ◆</option><option value="x-heart">Corazón ♥</option><option value="x-star">Estrella ★</option><option value="x-hexagon">Hexágono ⬢</option><option value="x-cross">Cruz ✚</option>
           </select>
         
+          <h4 style="margin:22px 0 4px">Más diseño <span class="prem-tag">ANUAL / NEGOCIO</span></h4>
+          <p class="prem-note" id="design-note"></p>
+          <label>Tamaño del punto: <span id="dot-scale-v">100</span>%</label>
+          <input type="range" id="dot-scale" min="55" max="100" value="100" oninput="document.getElementById('dot-scale-v').textContent=this.value;updateQR()">
+          <label style="display:flex;gap:8px;align-items:center;margin-top:10px"><input type="checkbox" id="bg-transp" onchange="updateQR()" style="width:auto"> Fondo transparente (PNG / SVG)</label>
           <h4 style="margin:22px 0 4px">Marco del QR</h4><div class="chips" id="frame-chips"></div>
           <div id="frame-opts" class="grid-2" style="display:none">
             <div><label>Texto del marco</label><input type="text" id="frame-text" value="ESCANÉAME" maxlength="24" oninput="updateQR()"></div>
@@ -634,6 +642,9 @@
           <label data-i18n="lbl_logo">Subir Logo Central (PNG / JPG)</label>
           <input type="file" id="logo-input" accept="image/*" onchange="handleLogo(event)">
 
+          <label>Iniciales en el centro (hasta 3 letras)</label>
+          <div class="grid-2"><div><input type="text" id="ini-text" maxlength="3" placeholder="MOY" style="text-transform:uppercase"></div><div><input type="color" id="ini-color" value="#1a66d4" style="height:42px;width:100%"></div></div>
+          <button class="btn-secondary" type="button" style="margin:6px 0 10px" onclick="setInitials()">Poner iniciales</button>
           <label>Galería de logos (o sube el tuyo arriba)</label><div class="chips" id="logo-gallery"></div>
           <label>Tamaño del logotipo</label><input type="range" id="logo-size" min="20" max="50" value="40" oninput="updateQR()">
           <label data-i18n="lbl_ecc">Nivel de escaneabilidad (corrección de errores)</label><div class="ecc" id="ecc-cards"></div>
@@ -659,7 +670,9 @@
         </div>
 
         <div class="plan-banner" id="plan-banner"></div>
-        <button class="btn-primary" id="save-btn" style="margin-top: 12px;" onclick="saveAndGenerate()" data-i18n="btn_save">Guardar Cambios</button>
+        <button class="btn-primary" id="save-btn" style="margin-top: 12px;" onclick="saveAndGenerate()">Guardar y activar QR</button>
+        <button class="btn-secondary" id="new-btn" style="margin-top:8px" onclick="newQR()">＋ Crear otro QR</button>
+        <div id="mine-box"></div>
 
         <div class="grid-2" style="width: 100%; margin-top: 4px;">
           <div><label data-i18n="dl_size">Calidad</label>
@@ -672,18 +685,39 @@
 
     </div>
   
+    <section class="pricing" id="pagebuilder" style="display:none">
+      <div class="price-card">
+        <h2 id="pb-head" style="margin:0 0 4px;text-align:left"></h2>
+        <p style="color:var(--text-muted);margin:0 0 12px;font-size:.9rem">Se guarda como un QR dinámico: al escanearlo se abre tu página y puedes editarla cuando quieras.</p>
+        <div id="pb-fields"></div>
+        <label>Color principal</label><input type="color" id="pb-color" value="#1a66d4" style="height:42px;width:100%">
+        <div id="pb-bg">
+          <label>Fondo de la página</label>
+          <select id="pb-bgtype"><option value="">Sin fondo (blanco)</option><option value="color">Color liso</option><option value="gradient">Degradado</option><option value="image">Imagen (tu logo, una foto o tu diseño)</option></select>
+          <p class="prem-note" id="pb-bgnote" style="margin:6px 0"></p>
+          <div id="pb-bgcolors" class="grid-2" style="display:none"><div><label>Color</label><input type="color" id="pb-bg1" value="#eef2ff" style="height:42px;width:100%"></div><div id="pb-bg2w"><label>Segundo color</label><input type="color" id="pb-bg2" value="#c7d2fe" style="height:42px;width:100%"></div></div>
+          <div id="pb-bgimgw" style="display:none"><label>Imagen de fondo (enlace https)</label><input type="text" id="pb-bgimg" maxlength="400" placeholder="https://tusitio.com/fondo.jpg">
+            <label>…o súbela desde tu celular o computadora</label><input type="file" id="pb-bgfile" accept="image/*"><div id="pb-bgstat" style="font-size:.82rem;color:var(--text-muted)"></div></div>
+          <p style="font-size:.85rem;margin:8px 0">¿Prefieres que te lo diseñemos? <a href="#" onclick="askDesign();return false">Solicitar servicio de diseño</a></p>
+        </div>
+        <label>Vista previa</label><div id="pb-prev" style="background:#f9fafb;border-radius:12px;max-height:440px;overflow:auto"></div>
+        <button class="btn-primary" style="margin-top:12px" onclick="pbSave()">Guardar y generar QR</button>
+        <button class="btn-secondary" style="margin-top:8px" onclick="pbClose()">Cerrar</button>
+        <button class="btn-secondary" id="pb-resp-btn" style="margin-top:8px;display:none" onclick="pbResp()">Ver respuestas</button><div id="pb-resp" style="margin-top:10px;overflow:auto"></div>
+        <div id="pb-tables" style="display:none;margin-top:14px"><label>QR para las mesas (cuántas mesas tiene)</label><input type="number" id="pb-mesas" min="1" max="60" value="12"><button class="btn-secondary" style="margin-top:8px" onclick="printTables()">Imprimir QR numerados de las mesas</button></div>
+      </div>
+    </section>
     <section class="sol" id="soluciones"><h2>Soluciones para tu negocio</h2><p style="text-align:center;color:var(--text-muted);margin:0">Todo lo que necesitas para conectar, compartir y hacer crecer tu negocio.</p><div class="sol-tabs" id="sol-tabs"></div><div class="sol-grid" id="sol-grid"></div></section>
 
-    <section class="pricing" id="solutions"><h2>Soluciones</h2><p style="text-align:center;color:var(--text-muted);margin:0">Todo lo que puedes conectar con un código QR.</p><div class="sol-tabs" id="sol-tabs"></div><div class="sol-grid" id="sol-grid"></div></section>
-    <section class="pricing"><h2>Planes y precios</h2><p style="text-align:center;color:var(--text-muted);margin:0">Empieza gratis y activa tu QR dinámico cuando lo necesites.</p><div class="price-grid" id="price-grid"></div></section>
+        <section class="pricing"><h2>Planes y precios</h2><p style="text-align:center;color:var(--text-muted);margin:0">Empieza gratis y activa tu QR dinámico cuando lo necesites.</p><div class="price-grid" id="price-grid"></div></section>
   </div>
 
   <div class="toast" id="toast"></div>
 
   <script>
     // ===== 1. CONFIG =====
-    const BASE_URL = "https://moy-devcode-labs.github.io/Genera-tu-QR/";
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxDd7WO0cLox8UmYYBV42722EqNkOfkVqMMqzaHKNd1r9vUYARdL0bjN-divJA8NnYSHg/exec";
+    const BASE_URL = "https://moy-devcode-labs-create.github.io/Genera-tu-QR/";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYulKXd6lccMAiDBT8VCsBJD_qwk3MVs-ANAeF69FepFGdxYS2g0DOnCm1IMPXs-hsiA/exec";
     // Solo para mostrar. El precio y la duración reales los define Code.gs (deben coincidir).
     const PLANS = {
       free:    { days: 7, scans: 50, price: {} },
@@ -943,10 +977,11 @@
     async function downloadQR() {
       const ext = $("dl-format").value, size = +$("dl-size").value, name = "qr-" + ($("qr-id").value.trim() || "codigo"), f = S.frame;
       const hq = new QRCodeStyling({ ...qrCode._options, width: size, height: size, margin: Math.round(QR_MARGIN * size / PREVIEW_SIZE), type: ext === "svg" && f === "none" ? "svg" : "canvas" });
+      if (f === "none" && isCustom()) return saveCustom(name, ext, size);
       if (f === "none") { await hq.download({ name, extension: ext }); return; }
       if (ext === "svg") toast("Con marco el archivo se descarga en PNG.");
       const fam = $("frame-font").value; try { await document.fonts.load("800 40px " + fam); } catch (e) {}
-      const out = ext === "svg" ? "png" : ext, img = await createImageBitmap(await hq.getRawData("png"));
+      const out = ext === "svg" ? "png" : ext, img = isCustom() ? await customBitmap(size) : await createImageBitmap(await hq.getRawData("png"));
       const c = $("frame-color").value, pad = Math.round(size * .05), bw = Math.round(size * .03), k = FS[$("frame-size").value] / .95, bar = f === "border" ? 0 : Math.round(size * .15 * Math.max(1, k));
       const W = size + 2 * pad, H = size + 2 * pad + bar, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
       const x = cv.getContext("2d"), rr = (a, b, w, hh, r, col) => { x.fillStyle = col; x.beginPath(); x.roundRect(a, b, w, hh, r); x.fill(); };
@@ -1061,7 +1096,8 @@
       if (email && !EMAIL_RE.test(email)) { switchTab(0); return toast(t("err_email"), "err"); }
       const btn = $("save-btn"); btn.disabled = true; let ok = false;
       try {
-        const d = await api({ action: "save", id, url, key, plan: S.plan, email, ...(isPro() ? { screen: JSON.stringify(scrCfg()) } : {}) });
+        const d = await apiPost({ action: "save", id, url, key, plan: S.plan, email, keys: knownKeys(), ...(isPro() ? { screen: JSON.stringify(scrCfg()) } : {}) });
+        if (d && d.scans !== undefined) { S.scans = d.scans; S.limit = d.limit; }
         if (d.status === "success") { if (PLANS[d.plan]) S.plan = d.plan; S.expires = d.expires || null; renderBanner(); toast(t("saved_ok")); ok = true; }
         else if (d.status === "payment_required") toast(t("pay_pending"), "err");
         else if (d.status === "quota") toast(`Llegaste al límite de ${d.limit} QR dinámicos de tu plan. Mejora tu plan para crear más.`, "err");
@@ -1170,6 +1206,7 @@
       const p = new URLSearchParams(location.search);
       if (p.get("pp") && p.get("token")) return finishPayment({ action: "paypal_capture", order: p.get("token") });
       if (p.get("tilopayLinkId")) return finishPayment({ action: "tilopay_confirm", link: p.get("tilopayLinkId"), order: p.get("orderNumber") || "" });
+      if (p.get("p")) return showPage(p.get("p"));
       if (p.get("r")) return resolveRedirect(p.get("r"));
       if (p.get("edit") && p.get("k")) return loadForEdit(p.get("edit"), p.get("k"));
       initUI();
@@ -1241,7 +1278,7 @@ function askQuote(){ CONTACT_URL ? window.open(CONTACT_URL, "_blank") : toast("E
   ["Corporativo","L 999+","/mes",["QR ilimitados o paquetes masivos","Gestión de equipos y API (a medida)"],[["contact","Cotizar"]]]];
   $("price-grid").innerHTML=C.map(([nm,p,per,f,b,best])=>`<div class="price-card${best?" best":""}">${best?'<span class="tag">Más completo</span>':""}<h3 style="margin:0">${nm}</h3><div class="price-big">${p}<small> ${per}</small></div><ul>${f.map(x=>"<li>"+x+"</li>").join("")}</ul>${b.map(([k,l],i)=>`<button class="btn-primary" style="margin-top:${i?8:0}px" onclick="${k==="contact"?"askQuote()":"pickPlan('"+k+"')"}">${l}</button>`).join("")}</div>`).join(""); })();
 
-const PRO_OPT={"dots-style":["classy","classy-rounded"],"frame-font":["Poppins","Montserrat","'Bebas Neue'","Pacifico"]};
+const PRO_OPT={"dots-style":["classy","classy-rounded","x-diamond","x-heart","x-star","x-hexagon","x-cross","x-leaf","x-mix"],"corner-square":["x-round","x-squircle","x-leaf","x-leaf2","x-drop","x-drop2","x-oct","x-diamond"],"corner-dot":["x-round","x-leaf","x-leaf2","x-drop","x-diamond","x-heart","x-star","x-hexagon","x-cross"],"frame-font":["Poppins","Montserrat","'Bebas Neue'","Pacifico"]};
 function isPro(){ return ["yearly","pro","proyear"].includes(S.plan)&&(!S.expires||new Date(S.expires)>Date.now()); }
 function lockPro(m){ toast(m||"🔒 Exclusivo del plan Anual"); setPlan("yearly"); switchTab(4); }
 function applyPro(){ const pro=isPro();
@@ -1266,19 +1303,19 @@ const _dl = downloadQR; downloadQR = async function(){ if (+$("dl-size").value >
 
 const SOL_TABS = ["Popular", "Negocio", "Marketing", "Productos", "Formularios y eventos"];
 const SOL = [
- { t: "Tarjeta digital", d: "Comparte tus datos de contacto y deja que te guarden con un toque.", c: ["Popular", "Negocio"], soon: 1 },
+ { t: "Tarjeta digital", d: "Comparte tus datos de contacto y deja que te guarden con un toque.", c: ["Popular", "Negocio"], page: "card" },
  { t: "QR de enlace (URL)", d: "Lleva a tus clientes a tu sitio, campaña o red social con un escaneo.", c: ["Popular", "Marketing"], type: 0 },
  { t: "QR de WhatsApp", d: "Abre un chat contigo con el mensaje ya escrito.", c: ["Popular", "Negocio", "Marketing"], type: 1 },
- { t: "Menú digital", d: "Menú por categorías, siempre actualizado, con QR para las mesas.", c: ["Popular", "Negocio"], soon: 1 },
+ { t: "Menú digital", d: "Menú por categorías, siempre actualizado, con QR para las mesas.", c: ["Popular", "Negocio"], page: "menu" },
  { t: "QR de PDF", d: "Folletos, catálogos y manuales a un escaneo (con el enlace a tu PDF).", c: ["Marketing", "Productos"], type: 13 },
  { t: "QR de Wi-Fi", d: "Tus clientes se conectan sin escribir la clave.", c: ["Negocio"], type: 6 },
  { t: "QR de ubicación", d: "Abre tu local directamente en el mapa.", c: ["Negocio", "Marketing"], type: 7 },
  { t: "QR de contacto (vCard)", d: "Tus datos en un QR para guardarlos en el teléfono.", c: ["Negocio"], type: 5 },
- { t: "Link in Bio", d: "Una página con todos tus enlaces para tus redes sociales.", c: ["Marketing"], soon: 1 },
+ { t: "Link in Bio", d: "Una página con todos tus enlaces para tus redes sociales.", c: ["Marketing"], page: "links" },
  { t: "QR de redes sociales", d: "Instagram, Facebook, YouTube o Telegram en un escaneo.", c: ["Marketing"], type: 10 },
  { t: "QR de app", d: "Enlace directo a tu app en App Store o Play Store.", c: ["Productos"], type: 15 },
- { t: "QR de producto", d: "Empaques con información, videos y soporte.", c: ["Productos"], soon: 1 },
- { t: "QR de formulario", d: "Recibe registros, opiniones y pedidos con un formulario.", c: ["Formularios y eventos"], soon: 1 },
+ { t: "QR de producto", d: "Empaques con información, videos y soporte.", c: ["Productos"], page: "product" },
+ { t: "QR de formulario", d: "Recibe registros, opiniones y pedidos con un formulario.", c: ["Formularios y eventos"], page: "form" },
  { t: "QR de evento", d: "Registro o ubicación de tu evento (enlace a tu formulario).", c: ["Formularios y eventos"], type: 0 }
 ];
 let solTab = "Popular";
@@ -1286,46 +1323,8 @@ function renderSol(){
   $("sol-tabs").innerHTML = SOL_TABS.map(t => `<button class="${t === solTab ? "on" : ""}" onclick="solTab='${t}';renderSol()">${t}</button>`).join("");
   $("sol-grid").innerHTML = SOL.map((s, i) => s.c.includes(solTab) ? `<div class="sol-card"><h3>${s.t}</h3><p>${s.d}</p>${s.soon ? '<span class="soon">PRÓXIMAMENTE</span>' : `<button class="btn-secondary" onclick="startSol(${i})">Crear ahora</button>`}</div>` : "").join("");
 }
-function startSol(i){ switchTab(0); pickType(SOL[i].type); document.querySelector(".tabs-nav").scrollIntoView({ behavior: "smooth" }); }
+function startSol(i){ if (SOL[i].page) return openBuilder(SOL[i].page); switchTab(0); pickType(SOL[i].type); document.querySelector(".tabs-nav").scrollIntoView({ behavior: "smooth" }); }
 renderSol(); applyRes();
-</script>
-
-<script>
-// ===== Catálogo de soluciones por categorías + resolución de descarga por plan =====
-const SOL_TABS=["Popular","Negocio","Marketing","Productos","Formularios y eventos"];
-// [icono, título, descripción, índice en TYPES (null = próximamente), categorías]
-const SOL=[
-["🌐","QR de enlace (URL)","Lleva a tu web, campaña o contenido en línea con un escaneo.",0,[0,2]],
-["💬","QR de WhatsApp","Abre un chat contigo con un mensaje ya escrito.",1,[0,1,2]],
-["👤","QR de contacto (vCard)","Guarda tus datos en la agenda del teléfono.",5,[1]],
-["📶","QR de Wi-Fi","Tus clientes se conectan a tu red sin escribir la clave.",6,[1]],
-["📍","QR de ubicación","Abre tu negocio en el mapa.",7,[1]],
-["📸","Redes sociales","YouTube, Instagram, Facebook y Telegram en un escaneo.",10,[2]],
-["📄","QR de PDF","Catálogos, menús y manuales (pega el enlace de tu PDF).",13,[3,2]],
-["🖼️","QR de imagen","Muestra una foto o un afiche (pega el enlace).",14,[3]],
-["📱","QR de app","Lleva a tu app en App Store o Google Play.",15,[3]],
-["📞","Llamada, correo y SMS","Contacto directo con un toque.",2,[4]],
-["🪪","Tarjeta de presentación digital","Página móvil con botón Guardar en Contactos.",null,[0,1]],
-["🍽️","Menú digital","Menú autogestionable para restaurantes y cafeterías.",null,[0,1]],
-["🔗","Link in Bio","Todos tus enlaces en una sola página.",null,[0,2]],
-["📝","Formularios y registro","Recoge datos de clientes y asistentes a eventos.",null,[4]],
-["📦","QR de producto","Información, videos y soporte en tu empaque.",null,[3]]];
-let solTab=0;
-function renderSol(){
-  $("sol-tabs").innerHTML=SOL_TABS.map((t,i)=>`<button class="${i===solTab?"sel":""}" onclick="solTab=${i};renderSol()">${t}</button>`).join("");
-  $("sol-grid").innerHTML=SOL.map((s,i)=>s[4].includes(solTab)?`<div class="sol-card${s[3]===null?" soon":""}" onclick="openSol(${i})"><span class="ic">${s[0]}</span><h3>${s[1]}</h3><p>${s[2]}</p><b>${s[3]===null?"Próximamente":"Crear ahora →"}</b></div>`:"").join("");
-}
-function openSol(i){ const s=SOL[i]; if(s[3]===null) return toast("«"+s[1]+"» estará disponible pronto."); switchTab(0); pickType(s[3]); document.querySelector(".tabs-nav").scrollIntoView({behavior:"smooth"}); }
-renderSol();
-
-const isPaid=()=>S.plan!=="free"&&(!S.expires||new Date(S.expires)>Date.now());
-const maxRes=()=>!isPaid()?1024:(["pro","proyear"].includes(S.plan)?4096:2048);
-function applyRes(){ const sel=$("dl-size"), m=maxRes();
-  if(![...sel.options].some(o=>o.value==="4096")) sel.add(new Option("4096 px","4096"));
-  [...sel.options].forEach(o=>{ o.dataset.b=o.dataset.b||o.textContent; const lock=+o.value>m; o.disabled=lock; o.textContent=o.dataset.b+(lock?" 🔒":""); });
-  if(+sel.value>m) sel.value=String(m); }
-const _rb2=renderBanner; renderBanner=function(){ _rb2(); applyRes(); };
-applyRes();
 </script>
 
 <script>
@@ -1370,6 +1369,372 @@ function lockScr() {
 document.querySelectorAll("#scr-opts input,#scr-opts select,#scr-mode").forEach(e => e.addEventListener("input", scrChange));
 const _rb5 = renderBanner; renderBanner = function () { _rb5(); lockScr(); };
 lockScr();
+</script>
+
+<script>
+// ===== Páginas digitales: tarjeta, menú, Link in Bio y producto =====
+const dg = s => String(s || "").replace(/\D/g, "");
+const safeLink = u => { u = String(u || "").trim(); return /^https?:\/\/[^\s"'<>]+$/i.test(u) ? u : ""; };
+const mk = (t, x, css) => { const e = document.createElement(t); if (x !== undefined) e.textContent = x; if (css) e.style.cssText = css; return e; };   // todo con textContent: nada se interpreta como HTML
+function pbBtn(label, href, color, onclick) {
+  const a = mk("a", label, `display:block;background:${color};color:${bright(color) > 150 ? "#111827" : "#fff"};padding:13px;border-radius:12px;margin:8px 0;font-weight:700;text-decoration:none;cursor:pointer`);
+  if (href) { a.href = href; if (/^https?:/.test(href)) { a.target = "_blank"; a.rel = "noopener"; } }
+  if (onclick) a.onclick = onclick; return a;
+}
+function vcf(d) {
+  const e = s => String(s || "").replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n");
+  return ["BEGIN:VCARD", "VERSION:3.0", "N:;" + e(d.name) + ";;;", "FN:" + e(d.name), d.org && "ORG:" + e(d.org), d.title && "TITLE:" + e(d.title),
+    d.phone && "TEL;TYPE=CELL:+" + dg(d.phone), d.email && "EMAIL:" + e(d.email), safeLink(d.web) && "URL:" + safeLink(d.web), "END:VCARD"].filter(Boolean).join("\r\n");
+}
+function renderPage(ty, d, plan) {
+  const c = hexOk(d.color), w = mk("div", undefined, "max-width:480px;margin:0 auto;padding:24px 18px 32px;font-family:system-ui,sans-serif;text-align:center;color:#111827");
+  if (safeImg(d.photo)) { const i = new Image(); i.src = safeImg(d.photo); i.alt = ""; i.style.cssText = "width:96px;height:96px;border-radius:50%;object-fit:cover;margin-bottom:8px"; i.onerror = () => i.remove(); w.appendChild(i); }
+  w.appendChild(mk("h1", ty === "card" ? d.name : d.title, "margin:4px 0;font-size:1.5rem;color:" + c));
+  (ty === "card" ? [d.title, d.org] : [d.bio, d.desc]).forEach(x => { if (x) w.appendChild(mk("p", x, "margin:4px 0;color:#4b5563")); });
+  if (ty === "card") {
+    if (dg(d.phone)) w.appendChild(pbBtn("📞 Llamar", "tel:+" + dg(d.phone), c));
+    if (dg(d.wa)) w.appendChild(pbBtn("💬 WhatsApp", "https://wa.me/" + dg(d.wa), c));
+    if (/^[^\s@<>"']+@[^\s@<>"']+$/.test(d.email || "")) w.appendChild(pbBtn("✉️ Correo", "mailto:" + d.email, c));
+    if (safeLink(d.web)) w.appendChild(pbBtn("🌐 Sitio web", safeLink(d.web), c));
+    const ig = /^@?[\w.]{2,30}$/.test(d.ig || "") ? "https://instagram.com/" + d.ig.replace("@", "") : safeLink(d.ig);
+    if (ig) w.appendChild(pbBtn("📸 Instagram", ig, c));
+    if (safeLink(d.fb)) w.appendChild(pbBtn("📘 Facebook", safeLink(d.fb), c));
+    w.appendChild(pbBtn("➕ Guardar en contactos", "", c, () => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([vcf(d)], { type: "text/vcard;charset=utf-8" })); a.download = (d.name || "contacto") + ".vcf"; a.click(); }));
+  } else if (ty === "menu") {
+    const ms = mesaNum(); if (ms) w.appendChild(mk("div", "Mesa " + ms, "display:inline-block;background:" + c + ";color:" + (bright(c) > 150 ? "#111827" : "#fff") + ";padding:4px 16px;border-radius:20px;font-weight:800;margin:6px 0"));
+    (d.cats || []).forEach(ct => {
+      w.appendChild(mk("h2", ct.n, "text-align:left;margin:22px 0 6px;font-size:1.1rem;border-bottom:2px solid " + c));
+      (ct.items || []).forEach(it => {
+        const r = mk("div", undefined, "display:flex;justify-content:space-between;gap:12px;text-align:left;padding:8px 0;border-bottom:1px solid #e5e7eb"), l = mk("div");
+        l.appendChild(mk("b", it[0])); if (it[2]) l.appendChild(mk("div", it[2], "font-size:.85rem;color:#6b7280"));
+        r.appendChild(l); if (it[1]) r.appendChild(mk("b", (d.currency || "") + " " + it[1], "white-space:nowrap")); w.appendChild(r);
+      });
+    });
+    if (dg(d.wa)) w.appendChild(pbBtn("💬 Pedir por WhatsApp", "https://wa.me/" + dg(d.wa) + mesaTxt(), c));
+  } else if (ty === "form") { renderForm(w, d, c);
+  } else (d.links || []).forEach(([l, u]) => { const s = safeLink(u); if (s) w.appendChild(pbBtn(l, s, c)); });
+  if (plan === "free") w.appendChild(mk("small", "Creada con QR-MOY", "display:block;margin-top:28px;color:#9ca3af"));
+  return w;
+}
+async function showPage(id) {   // vista pública: ?p=ID
+  $("app-view").style.display = "none"; $("redirect-view").style.display = "none";
+  const say = t => document.body.appendChild(mk("p", t, "text-align:center;padding:60px 20px;font-family:system-ui,sans-serif"));
+  try {
+    const d = await api({ action: "page_get", id });
+    if (d.status === "expired") return say("Esta página ya no está disponible.");
+    if (d.status !== "success") return say("Página no encontrada.");
+    const data = JSON.parse(d.data || "{}"); document.title = data.name || data.title || "Página"; document.body.style.background = "#f9fafb";
+    data._id = id; document.body.appendChild(renderPage(d.type, data, d.plan));
+  } catch (e) { say("No se pudo cargar la página."); }
+}
+async function apiPost(body) {   // POST como texto plano: el cuerpo es largo para ir en la URL
+  const r = await fetch(SCRIPT_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(body) });
+  return r.json();
+}
+
+// ---- Constructor ----
+const PB = {
+  card: { n: "Tarjeta digital", f: [["name", "Nombre completo"], ["title", "Cargo"], ["org", "Empresa"], ["phone", "Teléfono con código de país (ej. 504 9999 9999)"], ["wa", "WhatsApp con código de país"], ["email", "Correo"], ["web", "Sitio web (https://…)"], ["ig", "Instagram (@usuario o enlace)"], ["fb", "Facebook (enlace https)"], ["photo", "Foto (enlace https a tu imagen)"]] },
+  links: { n: "Link in Bio", f: [["title", "Título"], ["bio", "Descripción corta"], ["photo", "Foto o logo (enlace https)"]], t: ["links", "Tus enlaces, uno por línea: Etiqueta | https://enlace", "Instagram | https://instagram.com/tu_usuario\nMi tienda | https://mitienda.com"] },
+  menu: { n: "Menú digital", f: [["title", "Nombre del negocio"], ["currency", "Moneda (ej. L)"], ["wa", "WhatsApp para pedidos (opcional)"], ["photo", "Logo (enlace https)"]], t: ["menu", "Menú: # para categorías y una línea por plato: Nombre | precio | descripción", "# Bebidas\nCafé | 25 | Espresso doble\n# Comidas\nBaleada | 40 | Con todo"] },
+  product: { n: "QR de producto", f: [["title", "Nombre del producto"], ["desc", "Descripción"], ["photo", "Imagen (enlace https)"]], t: ["links", "Enlaces (video, manual, soporte), uno por línea: Etiqueta | https://enlace", "Ver video | https://youtube.com/...\nManual | https://..."] },
+  form: { n: "Formulario", f: [["title", "Título del formulario"], ["intro", "Texto de introducción"], ["btn", "Texto del botón (ej. Enviar)"], ["thanks", "Mensaje al enviar (ej. ¡Gracias!)"]], t: ["form", "Campos, uno por línea: Etiqueta | tipo | obligatorio (tipos: texto, correo, telefono, mensaje; obligatorio: si o no)", "Nombre | texto | si\nCorreo | correo | si\nMensaje | mensaje | no"] }
+};
+let pbT = "card";
+function pbData() {
+  const d = { color: $("pb-color").value }; PB[pbT].f.forEach(([k]) => d[k] = $("pb-" + k).value.trim());
+  const t = PB[pbT].t; if (!t) return d;
+  const lines = $("pb-text").value.split("\n").map(s => s.trim()).filter(Boolean);
+  if (t[0] === "form") d.fields = lines.map(l => l.split("|").map(s => s.trim())).filter(a => a[0]).slice(0, 10).map(a => [a[0].slice(0, 60), ["texto", "correo", "telefono", "mensaje"].includes((a[1] || "").toLowerCase()) ? a[1].toLowerCase() : "texto", /^s[ií]$/i.test(a[2] || "") ? "si" : "no"]);
+  else if (t[0] === "links") d.links = lines.map(l => l.split("|").map(s => s.trim())).filter(a => a[0] && a[1]).slice(0, 12).map(a => [a[0].slice(0, 40), a[1].slice(0, 300)]);
+  else { d.cats = []; lines.forEach(l => {
+    if (l.startsWith("#")) d.cats.push({ n: l.replace(/^#+\s*/, "").slice(0, 40), items: [] });
+    else { if (!d.cats.length) d.cats.push({ n: "Menú", items: [] }); const a = l.split("|").map(s => s.trim()); if (a[0]) d.cats[d.cats.length - 1].items.push([a[0].slice(0, 60), (a[1] || "").slice(0, 15), (a[2] || "").slice(0, 120)]); } }); }
+  return d;
+}
+function pbPrev() { const p = $("pb-prev"); p.textContent = ""; p.appendChild(renderPage(pbT, pbData(), "paid")); }
+function openBuilder(ty) {
+  pbT = ty; const b = PB[ty]; $("pb-head").textContent = b.n;
+  $("pb-fields").innerHTML = b.f.map(([k, l]) => `<label>${l}</label><input type="text" id="pb-${k}" maxlength="300">`).join("") + (b.t ? `<label>${b.t[1]}</label><textarea id="pb-text" rows="8" style="width:100%"></textarea>` : "");
+  if (b.t) $("pb-text").placeholder = b.t[2];
+  document.querySelectorAll("#pb-fields input,#pb-fields textarea,#pb-color").forEach(e => e.addEventListener("input", pbPrev));
+  $("pagebuilder").style.display = "block"; pbPrev(); $("pagebuilder").scrollIntoView({ behavior: "smooth" }); pbLoad();
+}
+async function pbLoad() {   // si este QR ya tiene página, la carga para editarla
+  try {
+    const d = await api({ action: "page_get", id: $("qr-id").value.trim() });
+    if (d.status !== "success" || d.type !== pbT) return;
+    const c = JSON.parse(d.data || "{}"); PB[pbT].f.forEach(([k]) => { if (c[k] !== undefined) $("pb-" + k).value = c[k]; }); if (c.color) $("pb-color").value = hexOk(c.color);
+    applyBg(c);
+    if (PB[pbT].t) $("pb-text").value = c.fields ? c.fields.map(a => a.join(" | ")).join("\n") : c.links ? c.links.map(a => a.join(" | ")).join("\n") : (c.cats || []).map(ct => "# " + ct.n + "\n" + ct.items.map(i => i.join(" | ")).join("\n")).join("\n");
+    pbPrev();
+  } catch (e) {}
+}
+function pbClose() { $("pagebuilder").style.display = "none"; }
+async function pbSave() {
+  const id = $("qr-id").value.trim(), data = pbData();
+  if (JSON.stringify(data).length > 44000) return toast("Tu página es demasiado larga.", "err");
+  if (S.type !== "dynamic") setQrType("dynamic");
+  $("dynamic-category").value = "url"; $("target-url").value = location.origin + location.pathname + "?p=" + id; toggleCategoryFields();
+  if (!(await saveAndGenerate())) return;
+  try {
+    const d = await apiPost({ action: "page_save", id, key: ownerToken(id), type: pbT, data: JSON.stringify(data) });
+    if (d.status === "success") { toast("Página guardada. Tu QR ya la abre."); switchTab(0); document.querySelector(".tabs-nav").scrollIntoView({ behavior: "smooth" }); }
+    else toast("No se pudo guardar la página.", "err");
+  } catch (e) { toast("Sin conexión con el servidor.", "err"); }
+}
+</script>
+
+<script>
+// ===== Formulario: vista pública, envío y respuestas =====
+function renderForm(w, d, c) {   // todo con textContent / .value: nada del usuario se interpreta como HTML
+  if (d.intro) w.appendChild(mk("p", d.intro, "margin:4px 0 14px;color:#4b5563"));
+  const f = mk("div", undefined, "text-align:left"), ins = [];
+  (d.fields || []).forEach(([l, t, rq]) => {
+    f.appendChild(mk("label", l + (rq === "si" ? " *" : ""), "display:block;margin:12px 0 4px;font-weight:600"));
+    const i = t === "mensaje" ? mk("textarea") : mk("input");
+    if (t === "mensaje") i.rows = 4; else i.type = t === "correo" ? "email" : t === "telefono" ? "tel" : "text";
+    i.maxLength = 500; i.style.cssText = "width:100%;box-sizing:border-box;padding:11px;border:1px solid #d1d5db;border-radius:10px;font:inherit";
+    f.appendChild(i); ins.push([l, i, rq]);
+  });
+  const st = mk("div", undefined, "margin-top:10px;font-weight:600;text-align:center");
+  f.appendChild(pbBtn(d.btn || "Enviar", "", c, async () => {
+    if (!d._id) return;   // en la vista previa no envía
+    const ans = []; for (const [l, i, rq] of ins) { const v = i.value.trim(); if (rq === "si" && !v) { st.textContent = "Completa: " + l; return; } ans.push([l, v]); }
+    st.textContent = "Enviando…";
+    try {
+      const r = await apiPost({ action: "form_submit", id: d._id, answers: ans });
+      st.textContent = r.status === "success" ? (d.thanks || "¡Gracias! Recibimos tu respuesta.") : "No se pudo enviar. Intenta de nuevo.";
+      if (r.status === "success") ins.forEach(([, i]) => i.value = "");
+    } catch (e) { st.textContent = "Sin conexión. Intenta de nuevo."; }
+  }));
+  f.appendChild(st); w.appendChild(f);
+}
+const _ob = openBuilder; openBuilder = function (ty) { _ob(ty); $("pb-resp-btn").style.display = ty === "form" ? "block" : "none"; $("pb-resp").textContent = ""; };
+async function pbResp() {
+  const id = $("qr-id").value.trim(), box = $("pb-resp"); box.textContent = "Cargando…";
+  try {
+    const d = await api({ action: "form_responses", id, key: ownerToken(id) });
+    if (d.status !== "success") { box.textContent = "No se pudieron cargar las respuestas (guarda primero tu formulario)."; return; }
+    box.textContent = ""; if (!d.rows.length) { box.textContent = "Aún no hay respuestas."; return; }
+    const tb = mk("table", undefined, "border-collapse:collapse;font-size:.82rem;width:100%"), csv = [["fecha", "respuestas"]];
+    d.rows.forEach(r => {
+      let a = []; try { a = JSON.parse(r[1]); } catch (e) {}
+      const txt = a.map(x => x[0] + ": " + x[1]).join(" · "), fe = r[0].slice(0, 16).replace("T", " "); csv.push([fe, txt]);
+      const tr = mk("tr"); [fe, txt].forEach(c => tr.appendChild(mk("td", c, "border:1px solid #e5e7eb;padding:6px;vertical-align:top"))); tb.appendChild(tr);
+    });
+    box.appendChild(tb);
+    box.appendChild(pbBtn("Descargar CSV", "", "#374151", () => {
+      const q = c => { c = String(c); if (/^[=+\-@]/.test(c)) c = "'" + c; return '"' + c.replace(/"/g, '""') + '"'; };   // evita fórmulas maliciosas al abrir en Excel
+      const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + csv.map(r => r.map(q).join(",")).join("\n")], { type: "text/csv;charset=utf-8" }));
+      a.download = "respuestas-" + id + ".csv"; a.click();
+    }));
+  } catch (e) { box.textContent = "Sin conexión con el servidor."; }
+}
+</script>
+
+<script>
+// ===== Formas especiales de puntos (plan anual / Negocio) e iniciales en el centro =====
+function starPath() { let d = ""; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, R = i % 2 ? .23 : .52; d += (i ? "L" : "M") + (.5 + R * Math.cos(a)).toFixed(3) + " " + (.54 + R * Math.sin(a)).toFixed(3); } return d + "Z"; }
+const rr4 = (x, y, w, h, [a, b, c, d]) => `M${x + a} ${y}H${x + w - b}${b ? `A${b} ${b} 0 0 1 ${x + w} ${y + b}` : ""}V${y + h - c}${c ? `A${c} ${c} 0 0 1 ${x + w - c} ${y + h}` : ""}H${x + d}${d ? `A${d} ${d} 0 0 1 ${x} ${y + h - d}` : ""}V${y + a}${a ? `A${a} ${a} 0 0 1 ${x + a} ${y}` : ""}Z`;
+const UNIT = { square: "M-.01 -.01H1.01V1.01H-.01Z", dots: "M.5 0A.5 .5 0 1 1 .5 1A.5 .5 0 1 1 .5 0Z", rounded: rr4(0, 0, 1, 1, [.3, .3, .3, .3]), "extra-rounded": rr4(0, 0, 1, 1, [.45, .45, .45, .45]),
+  classy: rr4(0, 0, 1, 1, [.5, 0, .5, 0]), "classy-rounded": rr4(0, 0, 1, 1, [.5, .15, .5, .15]),
+  diamond: "M.5 0L1 .5L.5 1L0 .5Z", heart: "M.5 .95C.1 .65 0 .42 0 .27 0 .1 .13 0 .27 0 .38 0 .46 .06 .5 .14 .54 .06 .62 0 .73 0 .87 0 1 .1 1 .27 1 .42 .9 .65 .5 .95Z",
+  hexagon: "M.25 .03L.75 .03L1 .5L.75 .97L.25 .97L0 .5Z", cross: "M.33 0H.67V.33H1V.67H.67V1H.33V.67H0V.33H.33Z", leaf: "M0 1C0 .35 .35 0 1 0 1 .65 .65 1 0 1Z", star: starPath() };
+const MIX = ["heart", "diamond", "star", "hexagon"];
+const EO = { square: [0, 0, 0, 0], "extra-rounded": [2, 2, 2, 2], dot: [3.5, 3.5, 3.5, 3.5], "x-round": [1.2, 1.2, 1.2, 1.2], "x-squircle": [2.8, 2.8, 2.8, 2.8], "x-leaf": [3.5, 0, 3.5, 0], "x-leaf2": [0, 3.5, 0, 3.5], "x-drop": [3.5, 3.5, 3.5, 0], "x-drop2": [0, 3.5, 3.5, 3.5] };
+function eyeOuter(k, x, y) {   // marco del ojo: 7x7 módulos con hueco de 5x5 (relleno "evenodd")
+  if (k === "x-oct") { const o = 1.6, i = 1.1; return `M${x + o} ${y}H${x + 7 - o}L${x + 7} ${y + o}V${y + 7 - o}L${x + 7 - o} ${y + 7}H${x + o}L${x} ${y + 7 - o}V${y + o}Z` + `M${x + 1 + i} ${y + 1}H${x + 6 - i}L${x + 6} ${y + 1 + i}V${y + 6 - i}L${x + 6 - i} ${y + 6}H${x + 1 + i}L${x + 1} ${y + 6 - i}V${y + 1 + i}Z`; }
+  if (k === "x-diamond") return `M${x + 3.5} ${y}L${x + 7} ${y + 3.5}L${x + 3.5} ${y + 7}L${x} ${y + 3.5}Z` + `M${x + 3.5} ${y + 1}L${x + 6} ${y + 3.5}L${x + 3.5} ${y + 6}L${x + 1} ${y + 3.5}Z`;
+  const r = EO[k] || EO.square; return rr4(x, y, 7, 7, r) + rr4(x + 1, y + 1, 5, 5, r.map(v => Math.max(0, v - 1)));
+}
+function eyeInner(k, x, y, col) {   // centro del ojo: 3x3 módulos
+  x += 2; y += 2;
+  const R = { square: [0, 0, 0, 0], dot: [1.5, 1.5, 1.5, 1.5], "x-round": [.7, .7, .7, .7], "x-leaf": [1.5, 0, 1.5, 0], "x-leaf2": [0, 1.5, 0, 1.5], "x-drop": [1.5, 1.5, 1.5, 0] }[k];
+  if (R) return `<path fill="${col}" d="${rr4(x, y, 3, 3, R)}"/>`;
+  const u = UNIT[k.replace(/^x-/, "")]; return u ? `<path fill="${col}" transform="translate(${x} ${y}) scale(3)" d="${u}"/>` : "";
+}
+const isCustom = () => isPro() && ($("dots-style").value.startsWith("x-") || $("corner-square").value.startsWith("x-") || $("corner-dot").value.startsWith("x-") || +$("dot-scale").value < 100 || $("bg-transp").checked);
+function qrSvg(px) {   // dibuja el QR con la matriz de la biblioteca, pero con nuestras formas
+  const q = qrCode._qr, n = q.getModuleCount(), m = 3, T = n + 2 * m, dk = $("dots-style").value.replace(/^x-/, ""), keys = dk === "mix" ? MIX : [dk];
+  const grad = $("color-type").value === "gradient", c1 = grad ? $("grad-color1").value : $("color-dots").value, c2 = grad ? $("grad-color2").value : c1;
+  const rad = $("grad-type") && $("grad-type").value === "radial", bgG = $("bg-grad") && $("bg-grad").checked, tr = $("bg-transp").checked, bg = $("color-bg").value;
+  const oc = $("eye-out-color").value, ic = $("eye-in-color").value, ek = $("corner-square").value, bk = $("corner-dot").value, sc = (+$("dot-scale").value || 100) / 100, off = (1 - sc) / 2;
+  const L = S.logo ? (Math.max(3, Math.round(n * ($("logo-size").value / 100) * .7)) | 1) : 0, mid = (n - 1) / 2;
+  const fz = (r, c) => (r < 8 && c < 8) || (r < 8 && c >= n - 8) || (r >= n - 8 && c < 8), stops = `<stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/>`;
+  const gd = rad ? `<radialGradient id="gd" gradientUnits="userSpaceOnUse" cx="${m + n / 2}" cy="${m + n / 2}" r="${n * .72}">${stops}</radialGradient>` : `<linearGradient id="gd" gradientUnits="userSpaceOnUse" x1="${m}" y1="${m}" x2="${m + n}" y2="${m + n}">${stops}</linearGradient>`;
+  let s = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 ${T} ${T}"${px ? ` width="${px}" height="${px}"` : ""}><defs>${gd}` +
+    (bgG ? `<linearGradient id="gb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${$("bg-c1").value}"/><stop offset="1" stop-color="${$("bg-c2").value}"/></linearGradient>` : "") +
+    keys.map(k => `<symbol id="u_${k}" viewBox="0 0 1 1" overflow="visible"><path d="${UNIT[k] || UNIT.square}"/></symbol>`).join("") + `</defs>` +
+    (tr ? "" : `<rect width="${T}" height="${T}" fill="${bgG ? "url(#gb)" : bg}"/>`) + `<g fill="url(#gd)">`;
+  for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) {
+    if (!q.isDark(r, c) || fz(r, c) || (L && Math.abs(r - mid) <= (L - 1) / 2 && Math.abs(c - mid) <= (L - 1) / 2)) continue;
+    const k = keys[(r * 31 + c * 17) % keys.length];
+    s += `<use xlink:href="#u_${k}" href="#u_${k}" x="${m + c + off}" y="${m + r + off}" width="${sc}" height="${sc}"/>`;
+  }
+  s += "</g>";
+  [[0, 0], [n - 7, 0], [0, n - 7]].forEach(([a, b]) => { const x = m + a, y = m + b; s += `<path fill-rule="evenodd" fill="${oc}" d="${eyeOuter(ek, x, y)}"/>` + eyeInner(bk, x, y, ic); });
+  if (L) { const lg = S.logo.replace(/"/g, "&quot;"); s += `<image xlink:href="${lg}" href="${lg}" x="${m + n / 2 - L / 2}" y="${m + n / 2 - L / 2}" width="${L}" height="${L}" preserveAspectRatio="xMidYMid meet"/>`; }
+  return s + "</svg>";
+}
+function applyCustom() {
+  let box = $("qr-custom"); if (!box) { box = document.createElement("div"); box.id = "qr-custom"; $("qrcode").after(box); }
+  const on = isCustom() && qrCode._qr; $("qrcode").style.display = on ? "none" : ""; box.style.display = on ? "flex" : "none"; box.style.justifyContent = "center";
+  if (on) { try { box.innerHTML = qrSvg(); const sv = box.firstChild; sv.style.cssText = `width:${PREVIEW_SIZE}px;height:${PREVIEW_SIZE}px;max-width:100%;display:block`; } catch (e) { box.style.display = "none"; $("qrcode").style.display = ""; } }
+}
+async function customBitmap(size) {
+  const url = URL.createObjectURL(new Blob([qrSvg(size)], { type: "image/svg+xml" })), im = new Image();
+  await new Promise((ok, no) => { im.onload = ok; im.onerror = no; im.src = url; });
+  const cv = document.createElement("canvas"); cv.width = cv.height = size; cv.getContext("2d").drawImage(im, 0, 0, size, size); URL.revokeObjectURL(url);
+  return createImageBitmap(cv);
+}
+async function saveCustom(name, ext, size) {
+  let blob;
+  if (ext === "svg") blob = new Blob([qrSvg(size)], { type: "image/svg+xml" });
+  else { const bm = await customBitmap(size), cv = document.createElement("canvas"); cv.width = cv.height = size; const x = cv.getContext("2d");
+    if (ext === "jpeg") { x.fillStyle = "#fff"; x.fillRect(0, 0, size, size); } x.drawImage(bm, 0, 0); blob = await new Promise(r => cv.toBlob(r, "image/" + ext, .95)); }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name + "." + ext; a.click();
+}
+const _uq3 = updateQR; updateQR = function () { _uq3(); applyCustom(); };
+function setInitials() {   // las iniciales se convierten en un logo circular (se limpian las letras: nada raro entra al SVG)
+  const t = ($("ini-text").value || "").toUpperCase().replace(/[^A-Z0-9ÁÉÍÓÚÑ]/g, "").slice(0, 3);
+  if (!t) { S.logo = ""; return updateQR(); }
+  S.logo = "data:image/svg+xml;utf8," + encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><circle cx='60' cy='60' r='58' fill='${$("ini-color").value}'/><text x='60' y='${t.length > 2 ? 76 : 80}' font-size='${t.length > 2 ? 44 : 56}' font-family='Arial,sans-serif' font-weight='800' fill='#fff' text-anchor='middle'>${t}</text></svg>`);
+  setEcc("H");
+}
+applyCustom();
+</script>
+
+<script>
+// ===== Mis QR, "Crear otro QR", plan de la cuenta y QR numerados para mesas =====
+const knownKeys = () => { const cur = ownerToken($("qr-id").value.trim()), all = Object.values(tokenMap()); if (localStorage.getItem("moy_acct")) all.push(localStorage.getItem("moy_acct")); return [...new Set([cur, ...all].filter(k => k && k.length >= 20))].slice(0, 10); };
+S.saved = false;
+function setSaveLabel() { $("save-btn").textContent = S.saved ? "Guardar cambios" : "Guardar y activar QR"; }
+function renderMine() {
+  const a = S.acct, box = $("mine-box"); box.textContent = ""; if (!a || !a.qrs || !a.qrs.length) return;
+  box.appendChild(mk("div", `Mis QR · ${a.used} de ${a.quota} en uso`, "font-weight:700;margin:14px 0 6px"));
+  a.qrs.forEach(q => {
+    const r = mk("div", undefined, "display:flex;justify-content:space-between;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:.82rem");
+    r.appendChild(mk("span", q.id + " · " + q.url.slice(0, 30) + " · " + q.scans + " escaneos", "word-break:break-all"));
+    const b = mk("button", "Editar"); b.className = "btn-secondary"; b.style.cssText = "width:auto;padding:4px 10px;flex:none";
+    b.onclick = () => { const k = tokenMap()[q.id]; if (k) loadForEdit(q.id, k); else toast("Abre el enlace de edición que enviamos a tu correo.", "err"); };
+    r.appendChild(b); box.appendChild(r);
+  });
+}
+async function refreshAccount() {
+  const keys = knownKeys(); if (!keys.length) return;
+  try {
+    const d = await apiPost({ action: "account", keys }); if (d.status !== "success") return;
+    S.acct = d; if (PLANS[d.plan]) { S.plan = d.plan; S.expires = d.expires; } renderBanner(); renderMine();
+  } catch (e) {}
+}
+function newQR() {
+  history.replaceState(null, "", location.pathname);
+  $("qr-id").value = "qr_" + crypto.randomUUID().slice(0, 8); S.saved = false; setSaveLabel();
+  pickType(0); $("target-url").value = ""; $("scr-mode").value = "direct"; scrChange(); pbClose();
+  renderBanner(); updateQR(); switchTab(0); document.querySelector(".tabs-nav").scrollIntoView({ behavior: "smooth" });
+  toast("QR nuevo listo: escribe el destino y presiona «Guardar y activar QR»."); $("target-url").focus();
+  refreshAccount();
+}
+const _sg2 = saveAndGenerate; saveAndGenerate = async function () { const ok = await _sg2(); if (ok) { S.saved = true; setSaveLabel(); refreshAccount(); } return ok; };
+const _lfe = loadForEdit; loadForEdit = async function (id, k) { await _lfe(id, k); S.saved = true; setSaveLabel(); };
+const _iu = initUI; initUI = function (id) { _iu(id); S.saved = false; setSaveLabel(); refreshAccount(); };
+
+// ---- Menú con mesas ----
+const mesaNum = () => (new URLSearchParams(location.search).get("mesa") || "").replace(/\D/g, "").slice(0, 3);
+const mesaTxt = () => { const m = mesaNum(); return m ? "?text=" + encodeURIComponent("Hola, quiero pedir en la Mesa " + m + ": ") : ""; };
+async function printTables() {
+  const id = $("qr-id").value.trim(), n = Math.min(60, Math.max(1, +$("pb-mesas").value || 1)), base = location.origin + location.pathname + "?p=" + id;
+  const w = window.open("", "_blank"); if (!w) return toast("Permite las ventanas emergentes para imprimir.", "err");
+  w.document.write("<p style='font-family:sans-serif;padding:20px'>Generando QR de las mesas…</p>");
+  const cells = [];
+  for (let i = 1; i <= n; i++) {
+    const q = new QRCodeStyling({ ...qrCode._options, data: base + "&mesa=" + i, width: 300, height: 300, margin: 4, type: "svg" });
+    cells.push(`<div class="c"><div class="t">Mesa ${i}</div>${await (await q.getRawData("svg")).text()}<div class="s">Escanea para ver el menú</div></div>`);
+  }
+  w.document.open(); w.document.write(`<!doctype html><meta charset="utf-8"><title>QR de mesas</title><style>body{font-family:system-ui,sans-serif;margin:0}.g{display:grid;grid-template-columns:repeat(2,1fr)}.c{border:1px dashed #9ca3af;padding:16px;text-align:center;page-break-inside:avoid}.c svg{width:260px;height:260px}.t{font-size:28px;font-weight:800}.s{font-size:13px;color:#4b5563}@media print{.n{display:none}}</style><div class="n" style="padding:12px;background:#fef3c7">Presiona Ctrl+P para imprimir o guardar como PDF.</div><div class="g">${cells.join("")}</div>`); w.document.close();
+}
+const _ob2 = openBuilder; openBuilder = function (ty) { _ob2(ty); $("pb-tables").style.display = ty === "menu" ? "block" : "none"; };
+setSaveLabel(); refreshAccount();
+</script>
+
+<script>
+function lockDesign() {
+  const p = isPro(), g = id => document.getElementById(id);
+  ["dot-scale", "bg-transp"].forEach(id => g(id).disabled = !p);
+  if (!p) { g("dot-scale").value = 100; g("dot-scale-v").textContent = 100; g("bg-transp").checked = false; }
+  g("design-note").innerHTML = p ? "✨ Plan activo: todas las formas de ojos y de puntos están disponibles." : "🔒 Formas especiales, ojos nuevos, tamaño del punto y fondo transparente son del plan anual y Negocio. <a href='#' onclick=\"pickPlan('yearly');return false\">Ver planes</a>";
+}
+const _rb6 = renderBanner; renderBanner = function () { _rb6(); lockDesign(); };
+lockDesign();
+</script>
+
+<script>
+// ===== Fondos para las páginas (tarjeta, menú, Link in Bio, producto, formulario) =====
+const PBI = { photo: "", bgimg: "" };   // imágenes subidas (se guardan comprimidas dentro de la página)
+const safeImg = u => { u = String(u || "").trim(); return (/^https:\/\/[^\s"'<>]+$/i.test(u) || /^data:image\/(png|jpeg|webp);base64,[A-Za-z0-9+\/=]+$/.test(u)) ? u : ""; };
+async function compressImg(file, maxSide, maxChars) {   // reduce la imagen para que quepa en la hoja de cálculo
+  const bm = await createImageBitmap(file), sc = Math.min(1, maxSide / Math.max(bm.width, bm.height)), cv = document.createElement("canvas");
+  cv.width = Math.max(1, Math.round(bm.width * sc)); cv.height = Math.max(1, Math.round(bm.height * sc));
+  const x = cv.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, cv.width, cv.height); x.drawImage(bm, 0, 0, cv.width, cv.height);
+  for (const q of [.85, .7, .55, .4, .3, .2]) { const u = cv.toDataURL("image/jpeg", q); if (u.length <= maxChars) return u; }
+  return "";
+}
+function bindUpload(fileEl, key, maxSide, maxChars, statEl, urlEl) {
+  fileEl.addEventListener("change", async () => {
+    const f = fileEl.files[0]; if (!f) return; statEl.textContent = "Procesando…";
+    try { const u = await compressImg(f, maxSide, maxChars);
+      if (!u) { PBI[key] = ""; statEl.textContent = "La imagen es muy pesada o compleja. Prueba con otra más simple o pega un enlace."; }
+      else { PBI[key] = u; urlEl.value = ""; statEl.textContent = "✔ Imagen cargada (" + Math.round(u.length * .75 / 1024) + " KB)"; }
+    } catch (e) { statEl.textContent = "No se pudo leer la imagen."; }
+    pbPrev();
+  });
+  urlEl.addEventListener("input", () => { if (urlEl.value.trim()) { PBI[key] = ""; statEl.textContent = ""; } });
+}
+function bgUi() { const t = $("pb-bgtype").value; $("pb-bgcolors").style.display = t && t !== "image" ? "grid" : "none"; $("pb-bg2w").style.display = t === "gradient" ? "block" : "none"; $("pb-bgimgw").style.display = t === "image" ? "block" : "none"; }
+function lockBg() {
+  const ok = curTier() !== "free"; $("pb-bgtype").disabled = !ok; if (!ok) { $("pb-bgtype").value = ""; bgUi(); }
+  $("pb-bgnote").innerHTML = ok ? "" : "🔒 Los fondos están disponibles en los planes de pago. <a href='#' onclick=\"pickPlan('monthly');return false\">Ver planes</a>";
+}
+function applyBg(c) {   // carga en el editor el fondo y las imágenes ya guardadas
+  $("pb-bgtype").value = c.bgtype || ""; if (c.bg1) $("pb-bg1").value = hexOk(c.bg1); if (c.bg2) $("pb-bg2").value = hexOk(c.bg2);
+  if (String(c.photo || "").startsWith("data:")) { PBI.photo = c.photo; if ($("pb-photo")) $("pb-photo").value = ""; if ($("pb-photostat")) $("pb-photostat").textContent = "✔ Imagen cargada"; }
+  if (String(c.bgimg || "").startsWith("data:")) { PBI.bgimg = c.bgimg; $("pb-bgimg").value = ""; $("pb-bgstat").textContent = "✔ Imagen cargada"; } else $("pb-bgimg").value = c.bgimg || "";
+  bgUi();
+}
+function withBg(w, d, plan) {   // el fondo solo se muestra en planes de pago (la vista previa del editor usa plan "paid")
+  const t = d.bgtype; if (!t || plan === "free") return w;
+  const o = mk("div", undefined, `position:relative;overflow:hidden;min-height:${plan === "paid" ? "420px" : "100vh"};padding:1px 0;background:${t === "gradient" ? `linear-gradient(160deg,${hexOk(d.bg1)},${hexOk(d.bg2)})` : hexOk(d.bg1)}`);
+  const im = t === "image" ? safeImg(d.bgimg) : "";
+  if (im) { const i = new Image(); i.src = im; i.alt = ""; i.style.cssText = "position:absolute;inset:0;width:100%;height:100%;object-fit:cover"; i.onerror = () => i.remove(); o.appendChild(i); o.appendChild(mk("div", undefined, "position:absolute;inset:0;background:rgba(0,0,0,.25)")); }
+  w.style.cssText += ";position:relative;z-index:1;box-sizing:border-box;width:calc(100% - 24px);background:rgba(255,255,255,.92);border-radius:22px;margin:22px auto;box-shadow:0 8px 30px rgba(0,0,0,.18)";
+  o.appendChild(w); return o;
+}
+const _rp = renderPage; renderPage = function (ty, d, plan) { return withBg(_rp(ty, d, plan), d, plan); };
+const _pd2 = pbData; pbData = function () {
+  const d = _pd2(); if (PBI.photo && "photo" in d) d.photo = PBI.photo;
+  const t = $("pb-bgtype").value; if (t) { d.bgtype = t; d.bg1 = $("pb-bg1").value; if (t === "gradient") d.bg2 = $("pb-bg2").value; if (t === "image") d.bgimg = PBI.bgimg || $("pb-bgimg").value.trim(); }
+  return d;
+};
+const _ob3 = openBuilder; openBuilder = function (ty) {
+  PBI.photo = ""; PBI.bgimg = ""; $("pb-bgtype").value = ""; $("pb-bgimg").value = ""; $("pb-bgstat").textContent = ""; bgUi();
+  _ob3(ty);
+  const ph = $("pb-photo");
+  if (ph) {   // junto al campo de foto o logo: opción de subir un archivo
+    const box = mk("div"); box.innerHTML = '<label>…o súbela desde tu celular o computadora</label><input type="file" id="pb-photofile" accept="image/*"><div id="pb-photostat" style="font-size:.82rem;color:var(--text-muted)"></div>';
+    ph.after(box); bindUpload($("pb-photofile"), "photo", 220, 14000, $("pb-photostat"), ph);
+  }
+  lockBg();
+};
+bindUpload($("pb-bgfile"), "bgimg", 640, 26000, $("pb-bgstat"), $("pb-bgimg"));
+document.querySelectorAll("#pb-bg input,#pb-bg select").forEach(e => e.addEventListener("input", () => { bgUi(); pbPrev(); }));
+const _rb7 = renderBanner; renderBanner = function () { _rb7(); lockBg(); };
+function askDesign() {   // pon tu WhatsApp (o enlace de contacto) en CONTACT_URL, una sola vez
+  const msg = "Hola, quiero el servicio de diseño para mi " + PB[pbT].n + " (código " + $("qr-id").value.trim() + "). Mi negocio es: ";
+  if (!CONTACT_URL) return toast("Escríbenos para solicitar tu diseño.");
+  window.open(CONTACT_URL + (CONTACT_URL.includes("wa.me") ? "?text=" + encodeURIComponent(msg) : ""), "_blank");
+}
+lockBg();
 </script>
 </body>
 </html>
