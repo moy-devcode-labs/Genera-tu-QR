@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Borrador de textos legales: revísalo con un profesional antes de publicarlo. Los datos del negocio se editan en config.js -->
+<title>Política de privacidad · QR-MOY</title><meta name="robots" content="index,follow">
+<style>
+:root{--bg:#fff;--text:#111827;--muted:#5b6475;--line:#e3e8f2;--accent:#1a66d4}
+@media(prefers-color-scheme:dark){:root{--bg:#0d1220;--text:#eef2fb;--muted:#a3adc2;--line:#27324f;--accent:#6aa3ff}}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+.wrap{max-width:780px;margin:0 auto;padding:24px 20px 60px}
+a{color:var(--accent)}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;font-weight:700}.top a{text-decoration:none}
+h1{font-size:1.9rem;margin:0 0 4px}h2{font-size:1.15rem;margin:28px 0 6px}p,li{color:var(--text)}.muted{color:var(--muted);font-size:.92rem}
+ul{padding-left:20px}footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+</style>
+</head><body><div class="wrap">
+<div class="top"><a href="./">← <span data-moy="brand">QR-MOY</span></a><span><a href="terminos.html">Términos</a> · <a href="privacidad.html">Privacidad</a></span></div>
+
+<h1>Política de privacidad</h1>
+<p class="muted">Última actualización: 26 de noviembre de 2026</p>
+<p>En <b data-moy="name">QR-MOY</b> («nosotros») explicamos qué datos recopilamos al usar <span data-moy="brand">QR-MOY</span>, para qué los usamos y cuáles son tus opciones.</p>
+
+<h2>1. Qué datos recopilamos</h2>
+<ul>
+<li><b>Correo electrónico</b> (opcional): para enviarte el enlace de edición de tu QR y avisos del servicio, como el aviso de que llegaste al límite de la prueba.</li>
+<li><b>Contenido que creas</b>: destino de tus QR, textos, imágenes y enlaces de tus páginas (tarjeta, menú, Link in Bio, producto) y la configuración de diseño.</li>
+<li><b>Registro de escaneos</b>: por cada escaneo guardamos la fecha y hora, el identificador del QR, su plan y el resultado (activo, vencido, límite alcanzado o suspendido). <b>No guardamos tu dirección IP, tu ubicación ni los datos de tu dispositivo.</b></li>
+<li><b>Datos de pago</b>: referencia del pago, monto, moneda, plan, estado y fecha. <b>No guardamos números de tarjeta</b>: los procesa el proveedor de pagos (Tilopay o PayPal). En transferencias, guardamos la referencia y la nota que escribas.</li>
+<li><b>Respuestas de formularios</b>: si alguien llena un formulario que creó un cliente nuestro, guardamos esas respuestas para que el creador del formulario pueda consultarlas.</li>
+<li><b>Reportes</b>: el motivo que escribas al reportar un QR o una página.</li>
+<li><b>En tu navegador</b>: guardamos una clave de edición y tus preferencias (idioma, tema) en el almacenamiento local de tu dispositivo. No usamos cookies de publicidad.</li>
+</ul>
+
+<h2>2. Para qué los usamos</h2>
+<p>Para prestarte el servicio (redirigir tus QR, aplicar los límites de tu plan, mostrar tus páginas), procesar pagos, enviarte avisos, dar soporte, prevenir abusos y cumplir obligaciones legales. No vendemos tus datos.</p>
+
+<h2>3. Con quién los compartimos</h2>
+<ul><li><b>Proveedores técnicos</b> que alojan y operan el sitio y los datos: GitHub (alojamiento de las páginas) y Google (hojas de cálculo y funciones donde se guardan los registros y el envío de correos), además de Google Fonts para las tipografías.</li>
+<li><b>Procesadores de pago</b>: Tilopay y PayPal, para cobrar.</li>
+<li><b>Autoridades</b>, cuando la ley lo exija.</li></ul>
+<p>Estos proveedores pueden estar en otros países, por lo que tus datos pueden tratarse fuera de <span data-moy="country">Honduras</span>.</p>
+
+<h2>4. Cuánto tiempo los conservamos</h2>
+<p>Conservamos los datos mientras tu QR o tu plan estén activos y durante el tiempo necesario para cumplir obligaciones legales, resolver disputas y prevenir abusos. Puedes pedirnos que eliminemos tus datos y tus QR en cualquier momento.</p>
+
+<h2>5. Tus derechos</h2>
+<p>Puedes pedirnos acceso, corrección o eliminación de tus datos, o retirar tu correo de nuestras comunicaciones. Escríbenos a <span data-moy="contact"></span>. Si te pidieron tus datos mediante un formulario creado por un cliente nuestro, el responsable de esos datos es quien creó el formulario.</p>
+
+<h2>6. Seguridad</h2>
+<p>Usamos conexiones cifradas (HTTPS), guardamos solo una huella cifrada de tu clave de edición y mantenemos las credenciales de pago fuera del código público. Ningún sistema es 100% seguro, pero tomamos medidas razonables para proteger tus datos.</p>
+
+<h2>7. Menores de edad</h2>
+<p>El servicio no está dirigido a menores de 18 años.</p>
+
+<h2>8. Cambios y contacto</h2>
+<p>Podemos actualizar esta política y publicaremos la versión vigente con su fecha. Para cualquier consulta: <span data-moy="contact"></span>.</p>
+<footer>© <span id="yr"></span> <span data-moy="name">QR-MOY</span>. <a href="./">Volver al inicio</a></footer></div>
+<script src="config.js"></script>
+<script>
+(function(){ const M=window.MOY||{}, brand=M.brand||"QR-MOY", name=M.legalName||brand;
+  const contact=[M.email, M.wa ? "WhatsApp +"+M.wa : ""].filter(Boolean).join(" · ") || "los medios de contacto publicados en el sitio";
+  document.querySelectorAll("[data-moy]").forEach(e=>{ const k=e.dataset.moy; e.textContent = k==="name"?name : k==="brand"?brand : k==="contact"?contact : k==="country"?(M.country||"Honduras") : ""; });
+  document.title = document.title.replace("QR-MOY", brand); })();
+</script>
+<script>document.getElementById("yr").textContent=new Date().getFullYear();</script></body></html>
